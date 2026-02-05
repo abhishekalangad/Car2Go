@@ -3,54 +3,168 @@
  * CAR2GO - Premium Landing Page
  */
 
+require_once 'config/db_connect.php';
+require_once 'includes/security.php';
+
+// Fetch Dynamic Stats
+$total_cars = db_fetch_one($con, "SELECT COUNT(*) as count FROM rent")['count'] ?? 0;
+$total_drivers = db_fetch_one($con, "SELECT COUNT(*) as count FROM driver_reg")['count'] ?? 0;
+$total_partners = db_fetch_one($con, "SELECT COUNT(*) as count FROM service_reg")['count'] ?? 0;
+$total_users = db_fetch_one($con, "SELECT COUNT(*) as count FROM login WHERE l_type = 'user'")['count'] ?? 0;
+
+$no_padding = true;
 $page_title = 'Welcome to CAR2GO - Premium Car Rental & Driver Services';
 require_once 'templates/header.php';
 ?>
 
 <style>
-   /* Hero Section */
-   .hero-section {
-      position: relative;
-      height: 100vh;
-      width: 100%;
+   /* Custom Flex Utilities for BS3 */
+   .d-flex {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
       display: flex;
+   }
+
+   .align-items-center {
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      -ms-flex-align: center;
       align-items: center;
+   }
+
+   .justify-content-center {
+      -webkit-box-pack: center;
+      -webkit-justify-content: center;
+      -ms-flex-pack: center;
       justify-content: center;
-      background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)), url('images/bg3.jpg');
+   }
+
+   .h-100 {
+      height: 100% !important;
+   }
+
+   /* Carousel Enhancement */
+   .item {
+      height: 100vh;
+      min-height: 600px;
+      position: relative;
       background-size: cover;
       background-position: center;
-      color: white;
-      overflow: hidden;
+      width: 100%;
+      /* Ensure width */
+   }
+
+   /* Force Bootrap 3 Behavior if CSS is missing */
+   .carousel-inner>.item {
+      display: none;
+      position: relative;
+      -webkit-transition: .6s ease-in-out left;
+      -o-transition: .6s ease-in-out left;
+      transition: .6s ease-in-out left;
+   }
+
+   .carousel-inner>.item>img,
+   .carousel-inner>.item>a>img {
+      line-height: 1;
+   }
+
+   .carousel-inner>.active,
+   .carousel-inner>.next,
+   .carousel-inner>.prev {
+      display: block;
+   }
+
+   .carousel-inner>.active {
+      left: 0;
+   }
+
+   .carousel-inner>.next,
+   .carousel-inner>.prev {
+      position: absolute;
+      top: 0;
+      width: 100%;
+   }
+
+   .carousel-inner>.next {
+      left: 100%;
+   }
+
+   .carousel-inner>.prev {
+      left: -100%;
+   }
+
+   .carousel-inner>.next.left,
+   .carousel-inner>.prev.right {
+      left: 0;
+   }
+
+   .carousel-inner>.active.left {
+      left: -100%;
+   }
+
+   .carousel-inner>.active.right {
+      left: 100%;
+   }
+
+   .item::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.7) 0%, rgba(15, 23, 42, 0.3) 50%, rgba(15, 23, 42, 0.8) 100%);
+      z-index: 1;
    }
 
    .hero-content {
-      max-width: 800px;
-      text-align: center;
-      padding: 2rem;
+      position: relative;
       z-index: 2;
-      animation: fadeInUp 1s ease-out;
+      max-width: 900px;
+      text-align: center;
+      padding: 0 2rem;
+      margin-top: 50px;
+      /* Safe top margin */
    }
 
    .hero-title {
-      font-size: 4rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      letter-spacing: -2px;
-      line-height: 1.1;
+      font-size: 4.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      letter-spacing: -2.5px;
+      line-height: 1.05;
+      color: white;
+      /* Fallback */
+      text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+   }
+
+   .hero-title span {
+      display: block;
+      color: #3b82f6;
+      /* Fallback */
+      background: -webkit-linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 5px 15px rgba(37, 99, 235, 0.4));
    }
 
    .hero-subtitle {
-      font-size: 1.5rem;
-      margin-bottom: 2rem;
-      opacity: 0.9;
-      font-weight: 300;
+      font-size: 1.25rem;
+      margin-bottom: 2.5rem;
+      opacity: 0.85;
+      font-weight: 400;
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
    }
 
    .glass-card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--glass-border);
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 20px;
       padding: 3rem;
       box-shadow: var(--glass-shadow);
@@ -64,30 +178,71 @@ require_once 'templates/header.php';
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       text-transform: uppercase;
       letter-spacing: 1px;
+      display: inline-block;
+      margin: 0 10px;
    }
 
    .btn-gradient {
-      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-      color: white;
+      background: #2563eb;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: white !important;
       border: none;
    }
 
    .btn-gradient:hover {
-      transform: translateY(-5px) scale(1.05);
+      transform: translateY(-3px);
       box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4);
       color: white;
    }
 
    .btn-outline-glass {
-      border: 1px solid white;
-      color: white;
+      border: 2px solid white;
+      color: white !important;
       background: transparent;
    }
 
    .btn-outline-glass:hover {
       background: white;
-      color: var(--bg-dark);
+      color: #0f172a !important;
       transform: translateY(-5px);
+   }
+
+   /* Carousel Controls and Indicators */
+   .carousel-indicators li {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin: 0 8px;
+      background-color: rgba(255, 255, 255, 0.3);
+      border: none;
+   }
+
+   .carousel-indicators li.active {
+      background-color: #2563eb;
+      transform: scale(1.2);
+   }
+
+   .stats-floating-overlay {
+      position: absolute;
+      bottom: 50px;
+      left: 0;
+      right: 0;
+      z-index: 10;
+   }
+
+   .stats-floating-overlay .glass-card {
+      padding: 1.5rem 2rem !important;
+      background: rgba(15, 23, 42, 0.6);
+      width: auto !important;
+      min-width: 600px;
+   }
+
+   .tracking-widest {
+      letter-spacing: 0.15em;
+   }
+
+   .extra-small {
+      font-size: 0.65rem;
    }
 
    /* Services Section */
@@ -131,7 +286,7 @@ require_once 'templates/header.php';
    .service-card:hover {
       transform: translateY(-15px);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      border-color: var(--accent-color);
+      border-color: #2563eb;
    }
 
    .service-icon {
@@ -154,26 +309,6 @@ require_once 'templates/header.php';
       transform: rotateY(180deg);
    }
 
-   .service-card h3 {
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--bg-dark);
-   }
-
-   /* Floating Animations */
-   @keyframes fadeInUp {
-      from {
-         opacity: 0;
-         transform: translateY(40px);
-      }
-
-      to {
-         opacity: 1;
-         transform: translateY(0);
-      }
-   }
-
-   /* Features Section */
    .features-section {
       background: var(--bg-dark);
       color: white;
@@ -198,47 +333,75 @@ require_once 'templates/header.php';
       margin-right: 1.5rem;
       font-size: 0.8rem;
    }
-
-   .feature-text h4 {
-      margin-bottom: 0.2rem;
-      font-weight: 600;
-   }
-
-   .feature-text p {
-      opacity: 0.7;
-      font-size: 0.9rem;
-   }
-
-   /* Responsive adjustments */
-   @media (max-width: 768px) {
-      .hero-title {
-         font-size: 2.5rem;
-      }
-
-      .hero-subtitle {
-         font-size: 1.1rem;
-      }
-   }
 </style>
 
-<!-- Hero Section -->
-<section class="hero-section">
-   <div class="hero-content">
-      <div class="glass-card">
-         <h1 class="hero-title">Experience the Journey, Redefined.</h1>
-         <p class="hero-subtitle">Premium Car Rentals & Professional Driver Services at your fingertips. Luxury,
-            comfort, and reliability for every destination.</p>
-         <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
-            <a href="viewcars.php" class="btn btn-premium btn-gradient mb-3 mb-md-0 mx-2">
-               <i class="fas fa-car mr-2"></i> Find a Car
-            </a>
-            <a href="login.php" class="btn btn-premium btn-outline-glass mx-2">
-               <i class="fas fa-key mr-2"></i> Join Us
-            </a>
+<!-- Hero Carousel -->
+<div id="heroCarousel" class="carousel slide" data-ride="carousel">
+   <!-- Indicators -->
+   <ol class="carousel-indicators">
+      <li data-target="#heroCarousel" data-slide-to="0" class="active"></li>
+      <li data-target="#heroCarousel" data-slide-to="1"></li>
+      <li data-target="#heroCarousel" data-slide-to="2"></li>
+   </ol>
+
+   <div class="carousel-inner" role="listbox">
+      <!-- Slide 1 -->
+      <div class="item active" style="background-image: url('images/bg3.jpg');">
+         <div class="container d-flex align-items-center justify-content-center h-100 text-center">
+            <div class="hero-content">
+               <h1 class="hero-title animate__animated animate__fadeInUp">Experience the Journey,
+                  <br><span>Redefined</span>
+               </h1>
+               <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">Premium Car Rentals for
+                  every destination. Luxury, comfort, and reliability at your fingertips.</p>
+               <div class="animate__animated animate__fadeInUp animate__delay-2s" style="margin-top: 2rem;">
+                  <a href="viewcars.php" class="btn btn-premium btn-gradient">Explore Fleet</a>
+                  <a href="login.php" class="btn btn-premium btn-outline-glass">Get Started</a>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="item" style="background-image: url('images/bg7.jpg');">
+         <div class="container d-flex align-items-center justify-content-center h-100 text-center">
+            <div class="hero-content">
+               <h1 class="hero-title">Elite Chauffeur <br><span>Services</span></h1>
+               <p class="hero-subtitle">Professional, vetted, and experienced drivers for your personal or commercial
+                  vehicle. Your safety is our priority.</p>
+               <div class="mt-4" style="margin-top: 2rem;">
+                  <a href="viewdriv.php" class="btn btn-premium btn-gradient">Hire a Driver</a>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="item" style="background-image: url('images/bg8.jpg');">
+         <div class="container d-flex align-items-center justify-content-center h-100 text-center">
+            <div class="hero-content">
+               <h1 class="hero-title">Global Service <br><span>Network</span></h1>
+               <p class="hero-subtitle">Expert vehicle maintenance and diagnostics from our trusted partner centers.
+                  Keep your car in peak condition.</p>
+               <div class="mt-4" style="margin-top: 2rem;">
+                  <a href="viewservicee1.php" class="btn btn-premium btn-gradient">Find a Center</a>
+               </div>
+            </div>
          </div>
       </div>
    </div>
-</section>
+
+
+   <!-- Controls -->
+   <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+   </a>
+   <a class="carousel-control-next" href="#heroCarousel" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+   </a>
+</div>
 
 <!-- Services Section -->
 <section class="services-container">
@@ -342,5 +505,14 @@ require_once 'templates/header.php';
       </div>
    </div>
 </section>
+
+<script>
+   $(document).ready(function () {
+      $('#heroCarousel').carousel({
+         interval: 5000,
+         pause: "hover"
+      });
+   });
+</script>
 
 <?php require_once 'templates/footer.php'; ?>

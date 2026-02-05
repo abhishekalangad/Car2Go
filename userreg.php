@@ -1,18 +1,21 @@
 <?php
 session_start();
-require_once 'db_connect.php';
 require_once 'config/db_connect.php';
 require_once 'includes/security.php';
 
-$success_message = '';
+// Redirect if already logged in
+if (is_logged_in()) {
+  header("Location: profile.php");
+  exit();
+}
+
 $error_message = '';
+$success_message = '';
 
 if (isset($_POST['submit'])) {
-  // Verify CSRF token
   if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
-    $error_message = 'Invalid request. Please try again.';
+    $error_message = 'Invalid request.';
   } else {
-    // Sanitize inputs
     $name = sanitize_input($_POST['name']);
     $email = sanitize_input($_POST['email']);
     $password = $_POST['password'];
@@ -20,128 +23,168 @@ if (isset($_POST['submit'])) {
     $pincode = sanitize_input($_POST['pincode']);
     $phone = sanitize_input($_POST['phone']);
 
-    // Validate inputs
     if (!validate_email($email)) {
-      $error_message = 'Invalid email address';
+      $error_message = 'Invalid email address.';
     } else if (!validate_password($password)) {
-      $error_message = 'Password must be 8-15 characters with uppercase, lowercase, and number';
+      $error_message = 'Password must be 8-15 chars, with upper, lower & number.';
     } else if (!validate_pincode($pincode)) {
-      $error_message = 'Invalid pincode';
+      $error_message = 'Invalid 6-digit pincode.';
     } else if (!validate_phone($phone)) {
-      $error_message = 'Invalid phone number';
+      $error_message = 'Invalid 10-digit phone number.';
     } else {
-      // Validate file upload
-      $file_validation = validate_file_upload($_FILES['licence'], ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'], 5 * 1024 * 1024);
+      $file_validation = validate_file_upload($_FILES['licence'], ['image/jpeg', 'image/png', 'application/pdf'], 5 * 1024 * 1024);
 
       if ($file_validation !== true) {
-        $error_message = $file_validation;
+        $error_message = 'ID Proof error: ' . $file_validation;
       } else {
-        // Hash password BEFORE storing
-        $hashed_password = hash_password($password);
+        // Check if email already exists
+        $check_email = db_fetch_one($con, "SELECT l_id FROM login WHERE l_uname = ?", "s", [$email]);
+        if ($check_email) {
+          $error_message = 'Email address is already registered.';
+        } else {
+          $hashed_password = hash_password($password);
+          $type = 'user';
+          $approve = 'approve';
 
-        // Use prepared statements to prevent SQL injection
-        $type = 'user';
-        $approve = 'approve';
+          if (db_execute($con, "INSERT INTO login (l_uname, l_password, l_type, l_approve) VALUES (?, ?, ?, ?)", "ssss", [$email, $hashed_password, $type, $approve])) {
+            $id = $con->insert_id;
+            $licence_filename = generate_unique_filename($_FILES['licence']['name']);
 
-        $query1 = "INSERT INTO login (l_uname, l_password, l_type, l_approve) VALUES (?, ?, ?, ?)";
-        $stmt1 = db_execute($con, $query1, "ssss", [$email, $hashed_password, $type, $approve]);
+            $query = "INSERT INTO user_reg (ul_id, u_name, u_email, u_password, u_address, u_pincode, u_phone, u_licence) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            if (db_execute($con, $query, "isssssss", [$id, $name, $email, $hashed_password, $address, $pincode, $phone, $licence_filename])) {
 
-        if ($stmt1) {
-          $id = $con->insert_id;
+              $upload_dir = "uploads/documents/";
+              if (!is_dir($upload_dir))
+                mkdir($upload_dir, 0755, true);
 
-          // Generate unique filename for uploaded file
-          $licence_filename = generate_unique_filename($_FILES['licence']['name']);
-
-          $query2 = "INSERT INTO user_reg (ul_id, u_name, u_email, u_password, u_address, u_pincode, u_phone, u_licence) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-          $stmt2 = db_execute($con, $query2, "isssssss", [$id, $name, $email, $hashed_password, $address, $pincode, $phone, $licence_filename]);
-
-          if ($stmt2) {
-            // Create uploads directory if it doesn't exist
-            $upload_dir = "uploads/documents/";
-            if (!is_dir($upload_dir)) {
-              mkdir($upload_dir, 0755, true);
-            }
-
-            $licence_path = $upload_dir . $licence_filename;
-
-            if (move_uploaded_file($_FILES['licence']['tmp_name'], $licence_path)) {
-              $success_message = 'Successfully registered! You can now login.';
-              // Clear form by redirecting
-              redirect_with_message('login.php', 'Registration successful! Please login.', 'success');
+              move_uploaded_file($_FILES['licence']['tmp_name'], $upload_dir . $licence_filename);
+              redirect_with_message('login.php', 'Registration successful! Please sign in.', 'success');
             } else {
-              $error_message = 'Error uploading file. Registration incomplete.';
+              $error_message = 'Error saving profile details.';
             }
           } else {
-            $error_message = 'Error creating user profile';
+            $error_message = 'Registration failed. Please try again.';
           }
-        } else {
-          $error_message = 'Email already exists or registration failed';
         }
       }
     }
   }
 }
 
-include 'header.php';
+$page_title = 'Join CAR2GO - Premium User Registration';
+include 'templates/header.php';
 ?>
 
-<br><br>
-<center>
-  <div class="banner-form-agileinfo" style="width: 800px; min-height: 700px; padding: 20px;">
-    <h5>Fill Out The <span>Details</span></h5><br><br>
+<div class="hero-section"
+  style="min-height: 100vh; display: flex; align-items: center; padding: 100px 0; background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('images/bg3.jpg'); background-size: cover;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="glass-card p-5">
+          <div class="text-center mb-5">
+            <h2 class="display-4 font-weight-bold text-white mb-2">Join the <span>Fleet</span></h2>
+            <p class="text-white-50">Create your account to start renting premium vehicles.</p>
+          </div>
 
-    <?php if (!empty($error_message)): ?>
-      <div class="alert alert-danger"
-        style="background-color:#ffcccc; color:#cc0000; padding:10px; margin:10px; border-radius:5px;">
-        <?php echo e($error_message); ?>
+          <?php if ($error_message): ?>
+            <div class="alert alert-danger mb-4 shadow-sm border-0"><?php echo e($error_message); ?></div>
+          <?php endif; ?>
+
+          <form action="" method="post" enctype="multipart/form-data" class="premium-form">
+            <input type="hidden" name="csrf_token" value="<?php echo generate_csrf_token(); ?>">
+
+            <div class="row">
+              <div class="col-md-6 form-group mb-4">
+                <label class="text-white-50 small uppercase mb-2">Full Name</label>
+                <input type="text" name="name" class="form-control bg-transparent text-white border-secondary"
+                  placeholder="Enter your full name" required
+                  value="<?php echo isset($_POST['name']) ? e($_POST['name']) : ''; ?>">
+              </div>
+              <div class="col-md-6 form-group mb-4">
+                <label class="text-white-50 small uppercase mb-2">Email Address</label>
+                <input type="email" name="email" class="form-control bg-transparent text-white border-secondary"
+                  placeholder="name@example.com" required
+                  value="<?php echo isset($_POST['email']) ? e($_POST['email']) : ''; ?>">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 form-group mb-4">
+                <label class="text-white-50 small uppercase mb-2">Password</label>
+                <input type="password" name="password" class="form-control bg-transparent text-white border-secondary"
+                  placeholder="Min. 8 characters" required>
+              </div>
+              <div class="col-md-6 form-group mb-4">
+                <label class="text-white-50 small uppercase mb-2">Phone Number</label>
+                <input type="text" name="phone" class="form-control bg-transparent text-white border-secondary"
+                  placeholder="10-digit number" pattern="[0-9]{10}" required
+                  value="<?php echo isset($_POST['phone']) ? e($_POST['phone']) : ''; ?>">
+              </div>
+            </div>
+
+            <div class="form-group mb-4">
+              <label class="text-white-50 small uppercase mb-2">Mailing Address</label>
+              <textarea name="address" class="form-control bg-transparent text-white border-secondary" rows="2"
+                placeholder="Street, City, State"
+                required><?php echo isset($_POST['address']) ? e($_POST['address']) : ''; ?></textarea>
+            </div>
+
+            <div class="row align-items-end">
+              <div class="col-md-6 form-group mb-4">
+                <label class="text-white-50 small uppercase mb-2">Pincode</label>
+                <input type="text" name="pincode" class="form-control bg-transparent text-white border-secondary"
+                  placeholder="6-digit ZIP" maxlength="6" pattern="[0-9]{6}" required
+                  value="<?php echo isset($_POST['pincode']) ? e($_POST['pincode']) : ''; ?>">
+              </div>
+              <div class="col-md-6 form-group mb-4">
+                <label class="text-white-50 small uppercase mb-2">Identity Proof (License/ID)</label>
+                <div class="custom-file">
+                  <input type="file" name="licence" class="custom-file-input" id="customFile" required>
+                  <label class="custom-file-label bg-transparent border-secondary text-white-50" for="customFile">Choose
+                    file</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="alert alert-info border-secondary bg-transparent text-white-50 small mt-3">
+              <i class="fas fa-shield-alt mr-2"></i> Your data is processed securely and encrypted at rest.
+            </div>
+
+            <div class="text-center mt-5">
+              <button type="submit" name="submit" class="btn btn-premium btn-gradient px-5 py-3 font-weight-bold">
+                CREATE ACCOUNT
+              </button>
+              <p class="text-white-50 mt-4 small">
+                Already have an account? <a href="login.php" class="text-primary font-weight-bold">Sign In</a>
+              </p>
+            </div>
+          </form>
+        </div>
       </div>
-    <?php endif; ?>
-
-    <?php if (!empty($success_message)): ?>
-      <div class="alert alert-success"
-        style="background-color:#ccffcc; color:#006600; padding:10px; margin:10px; border-radius:5px;">
-        <?php echo e($success_message); ?>
-      </div>
-    <?php endif; ?>
-
-    <form action="#" method="post" enctype="multipart/form-data">
-      <!-- CSRF Token -->
-      <input type="hidden" name="csrf_token" value="<?php echo generate_csrf_token(); ?>">
-
-      <input type="text" class="email" name="name" placeholder="Name" required=""
-        value="<?php echo isset($_POST['name']) ? e($_POST['name']) : ''; ?>">
-
-      <input type="email" class="tel" name="email" placeholder="Email" required=""
-        value="<?php echo isset($_POST['email']) ? e($_POST['email']) : ''; ?>">
-
-      <input type="password" class="tel" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,15}"
-        title="Must contain at least one number, one uppercase and lowercase letter, and 8-15 characters"
-        placeholder="Password" required="">
-
-      <textarea name="address" cols="3" rows="3"
-        placeholder="Address"><?php echo isset($_POST['address']) ? e($_POST['address']) : ''; ?></textarea>
-
-      <input type="text" class="email" name="pincode" placeholder="Pincode" maxlength="6" minlength="6"
-        pattern="[0-9]{6}" required="" value="<?php echo isset($_POST['pincode']) ? e($_POST['pincode']) : ''; ?>">
-
-      <input type="text" class="tel" name="phone" placeholder="Phone No" pattern="[0-9]{10}" maxlength="10"
-        minlength="10" required="" value="<?php echo isset($_POST['phone']) ? e($_POST['phone']) : ''; ?>">
-
-      <label for="img1" style="color: white;">ID Proof (JPG, PNG, or PDF - Max 5MB)</label>
-      <input type="file" id="img1" name="licence" accept=".jpg,.jpeg,.png,.pdf" required
-        style="border: none; width: 100%; background: rgba(0, 0, 0, 0.5); padding: 10px 15px; margin-bottom: 15px; outline: none; font-size: 14px; color: #fff; letter-spacing: 1px;">
-      <br><br>
-
-      <input type="submit" class="hvr-shutter-in-vertical" value="Get started" name="submit">
-
-      <div style="margin-top:15px; color:white;">
-        Already have an account? <a href="login.php" style="color:#4CAF50;">Login here</a>
-      </div>
-    </form>
+    </div>
   </div>
-</center>
-<br><br><br>
-<br><br><br>
-<br><br><br>
+</div>
 
-<?php include 'footer.php'; ?>
+<style>
+  .uppercase {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .custom-file-label::after {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+  }
+</style>
+
+<script>
+  // Show filename on upload
+  document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+    var fileName = e.target.files[0].name;
+    var nextSibling = e.target.nextElementSibling;
+    nextSibling.innerText = fileName;
+  });
+</script>
+
+<?php include 'templates/footer.php'; ?>

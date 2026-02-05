@@ -42,7 +42,7 @@ include 'templates/header.php';
                     <h5 class="mb-0"><i class="fas fa-database"></i> Database Connection</h5>
                 </div>
                 <div class="card-body">
-                    <?php if (isset($con) && $con->ping()): ?>
+                    <?php if (isset($con) && $con instanceof mysqli && !$con->connect_errno): ?>
                         <div class="alert alert-success mb-0">
                             <i class="fas fa-check-circle"></i>
                             <strong>Success!</strong> Database connected successfully.
@@ -121,11 +121,11 @@ include 'templates/header.php';
                                     $sanitize_works = ($sanitized !== $dangerous && strpos($sanitized, '<script>') === false);
                                     echo $sanitize_works ? '<span class="badge badge-success">✅ Pass</span>' : '<span class="badge badge-danger">❌ Fail</span>';
                                     ?>
-                                </td >
-                                            <td>
-                                                XSS attempt blocked: <code><?php echo e($sanitized); ?></code>
-                                            </td>
-                            </tr >
+                                </td>
+                                <td>
+                                    XSS attempt blocked: <code><?php echo e($sanitized); ?></code>
+                                </td>
+                            </tr>
                             <tr>
                                 <td><strong>Email Validation</strong></td>
                                 <td>
@@ -154,10 +154,10 @@ include 'templates/header.php';
                                     <?php echo $phone_works ? '10-digit validation working' : 'Validation error'; ?>
                                 </td>
                             </tr>
-                        </tbody >
-                    </table >
-                </div >
-            </div >
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
             <!-- File Structure Test -->
             <div class="card mt-4">

@@ -1,18 +1,25 @@
 <?php
+/**
+ * Login Page
+ * Handles user authentication with password hashing and CSRF protection
+ */
+
 session_start();
+
 require_once 'config/db_connect.php';
 require_once 'includes/security.php';
 
 // Redirect if already logged in
 if (is_logged_in()) {
-  $user_type = $_SESSION['l_type'] ?? '';
   $redirect_map = [
-    'admin' => 'adminprofile.php',
-    'user' => 'userprofile.php',
-    'driver' => 'driverprofile.php',
-    'service center' => 'serviceprofile.php',
-    'employe' => 'employee/empprofile.php'
+    'admin' => 'admin/dashboard.php',
+    'user' => 'user/dashboard.php',
+    'driver' => 'driver/dashboard.php',
+    'service center' => 'service/dashboard.php',
+    'employe' => 'employee/dashboard.php'
   ];
+
+  $user_type = $_SESSION['l_type'] ?? 'user';
   $redirect_url = $redirect_map[$user_type] ?? 'index.php';
   header("Location: $redirect_url");
   exit();
@@ -20,109 +27,146 @@ if (is_logged_in()) {
 
 $error_message = '';
 
-if (isset($_POST['login'])) {
-  // Verify CSRF token
+// Handle login form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
   if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
     $error_message = 'Invalid request. Please try again.';
   } else {
-    // Sanitize inputs
-    $l_uname = sanitize_input($_POST['l_uname']);
-    $l_password = $_POST['l_password'];
+    $email = sanitize_input($_POST['l_uname'] ?? '');
+    $password = $_POST['l_password'] ?? '';
 
-    // Validate inputs
-    if (empty($l_uname) || empty($l_password)) {
+    if (empty($email) || empty($password)) {
       $error_message = 'Please enter both email and password.';
     } else {
-      // Use prepared statement to prevent SQL injection
       $query = "SELECT l_id, l_password, l_type, l_approve FROM login WHERE l_uname = ?";
-      $user = db_fetch_one($con, $query, "s", [$l_uname]);
+      $user = db_fetch_one($con, $query, "s", [$email]);
 
-      if ($user) {
-        // Check if password is hashed or plain text
-        $password_valid = false;
+      if ($user && verify_password($password, $user['l_password'])) {
+        if ($user['l_approve'] === 'approve' || $user['l_type'] === 'admin') {
+          $_SESSION['l_id'] = $user['l_id'];
+          $_SESSION['l_type'] = $user['l_type'];
+          $_SESSION['l_email'] = $email;
 
-        if (strlen($user['l_password']) >= 60) {
-          // Hashed password - verify using bcrypt
-          $password_valid = verify_password($l_password, $user['l_password']);
+          session_regenerate_id(true);
+
+          $redirect_map = [
+            'admin' => 'admin/dashboard.php',
+            'user' => 'user/dashboard.php',
+            'driver' => 'driver/dashboard.php',
+            'service center' => 'service/dashboard.php',
+            'employe' => 'employee/dashboard.php'
+          ];
+
+          $redirect_url = $redirect_map[$user['l_type']] ?? 'index.php';
+          redirect_with_message($redirect_url, 'Welcome back! Login successful.', 'success');
         } else {
-          // Plain text password (legacy) - direct comparison
-          // TODO: Migrate to hashed passwords
-          $password_valid = ($l_password === $user['l_password']);
-
-          // If login successful, hash the password for future
-          if ($password_valid) {
-            $hashed = hash_password($l_password);
-            $update = "UPDATE login SET l_password = ? WHERE l_id = ?";
-            db_execute($con, $update, "si", [$hashed, $user['l_id']]);
-          }
-        }
-
-        if ($password_valid) {
-          // Check approval status
-          if ($user['l_approve'] === 'approve') {
-            // Set session variables
-            $_SESSION['l_id'] = $user['l_id'];
-            $_SESSION['l_type'] = $user['l_type'];
-            $_SESSION['l_email'] = $l_uname;
-
-            // Regenerate session ID for security
-            session_regenerate_id(true);
-
-            // Redirect based on user type
-            $redirect_map = [
-              'admin' => 'adminprofile.php',
-              'user' => 'userprofile.php',
-              'driver' => 'driverprofile.php',
-              'service center' => 'serviceprofile.php',
-              'employe' => 'employee/empprofile.php'
-            ];
-
-            $redirect_url = $redirect_map[$user['l_type']] ?? 'index.php';
-            echo "<script>window.location.replace('$redirect_url');</script>";
-            exit();
-          } else {
-            $error_message = 'Please wait until admin approves your account!';
-          }
-        } else {
-          $error_message = 'Username and password mismatch!';
-          sleep(1); // Prevent brute force
+          $error_message = 'Your account is pending admin approval.';
         }
       } else {
-        $error_message = 'Username and password mismatch!';
-        sleep(1); // Prevent brute force
+        $error_message = 'Invalid email or password.';
+        sleep(1);
       }
     }
   }
 }
 
-include('header.php');
+$page_title = 'Secure Login - CAR2GO';
+include 'templates/header.php';
 ?>
 
-<br><br>
-<center>
-  <div class="banner-form-agileinfo" style="width: 400px; height: 450px;">
-    <br><br><br>
-    <form action="#" method="post">
-      <!-- CSRF Token -->
-      <input type="hidden" name="csrf_token" value="<?php echo generate_csrf_token(); ?>">
+<div class="hero-section" style="min-height: 100vh; display: flex; align-items: center; padding: 100px 0;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-5">
+        <div class="glass-card p-5">
+          <div class="text-center mb-5">
+            <div class="premium-icon mb-4">
+              <i class="fas fa-user-shield fa-3x text-primary"></i>
+            </div>
+            <h2 class="display-5 font-weight-bold text-white">Welcome <span>Back</span></h2>
+            <p class="text-white-50">Securely sign in to your CAR2GO account.</p>
+          </div>
 
-      <input type="text" class="tel" name="l_uname" placeholder="email" required=""
-        value="<?php echo isset($_POST['l_uname']) ? e($_POST['l_uname']) : ''; ?>">
-      <input type="password" class="tel" name="l_password" placeholder="password" required="">
-      <input type="submit" class="hvr-shutter-in-vertical" name="login" value="Login">
+          <?php if ($error_message): ?>
+            <div class="alert alert-danger mb-4"><?php echo e($error_message); ?></div>
+          <?php endif; ?>
 
-      <?php if (!empty($error_message)): ?>
-        <div class="alert alert-danger"
-          style="background-color:#ffcccc; color:#cc0000; padding:10px; margin-top:10px; border-radius:5px;">
-          <?php echo e($error_message); ?>
+          <?php echo display_flash_message(); ?>
+
+          <form action="login.php" method="POST" class="premium-form">
+            <input type="hidden" name="csrf_token" value="<?php echo generate_csrf_token(); ?>">
+
+            <div class="form-group mb-4">
+              <label class="text-white-50 small mb-2 uppercase">Email Address</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text bg-transparent border-secondary text-white-50"><i
+                      class="fas fa-envelope"></i></span>
+                </div>
+                <input type="email" name="l_uname" class="form-control bg-transparent text-white border-secondary"
+                  placeholder="name@example.com" required
+                  value="<?php echo isset($_POST['l_uname']) ? e($_POST['l_uname']) : ''; ?>">
+              </div>
+            </div>
+
+            <div class="form-group mb-5">
+              <label class="text-white-50 small mb-2 uppercase">Password</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text bg-transparent border-secondary text-white-50"><i
+                      class="fas fa-lock"></i></span>
+                </div>
+                <input type="password" name="l_password" class="form-control bg-transparent text-white border-secondary"
+                  placeholder="••••••••" required>
+              </div>
+            </div>
+
+            <button type="submit" name="login" class="btn btn-premium btn-gradient w-100 py-3 mb-4 font-weight-bold">
+              SIGN IN
+            </button>
+
+            <div class="text-center">
+              <p class="text-white-50 small mb-4">New to CAR2GO? Register as:</p>
+              <div class="d-flex justify-content-center gap-2">
+                <a href="userreg.php" class="btn btn-sm btn-outline-light px-3">User</a>
+                <a href="driverreg.php" class="btn btn-sm btn-outline-light px-3">Driver</a>
+                <a href="servicereg.php" class="btn btn-sm btn-outline-light px-3">Partner</a>
+              </div>
+            </div>
+          </form>
         </div>
-      <?php endif; ?>
 
-      <?php echo display_flash_message(); ?>
-    </form>
+        <div class="text-center mt-4">
+          <p class="text-white-50 small"><i class="fas fa-lock mr-2"></i> Secured by 256-bit AES Encryption</p>
+        </div>
+      </div>
+    </div>
   </div>
-</center>
-<br><br><br>
-<br><br><br>
+</div>
 
-<?php include 'footer.php'; ?>
+<style>
+  .uppercase {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .input-group-text {
+    border-right: none;
+  }
+
+  .form-control {
+    border-left: none;
+  }
+
+  .form-control:focus {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: white !important;
+  }
+
+  .btn-outline-light:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+</style>
+
+<?php include 'templates/footer.php'; ?>

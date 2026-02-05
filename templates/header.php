@@ -17,9 +17,13 @@ if (!isset($page_title)) {
     $page_title = 'CAR2GO - Car Rental & Driver Booking';
 }
 
-// Get base URL dynamically
-$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
-$base_url = $protocol . '://' . $_SERVER['HTTP_HOST'] . '/';
+// Get base URL dynamically if not set
+if (!isset($base_url)) {
+    $script_name = $_SERVER['SCRIPT_NAME'];
+    $project_path = str_replace(basename($script_name), '', $script_name);
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $base_url = $protocol . '://' . $_SERVER['HTTP_HOST'] . $project_path;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,6 +56,9 @@ $base_url = $protocol . '://' . $_SERVER['HTTP_HOST'] . '/';
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo $base_url; ?>css/style.css">
@@ -89,15 +96,60 @@ $base_url = $protocol . '://' . $_SERVER['HTTP_HOST'] . '/';
             max-width: 400px;
         }
 
+
+        .navbar {
+            padding: 1rem 2rem;
+            background:
+                <?php echo isset($no_padding) && $no_padding ? 'rgba(15, 23, 42, 0.4)' : 'rgba(15, 23, 42, 0.85)'; ?>
+                !important;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.4s ease;
+        }
+
         .navbar-brand {
-            font-weight: 700;
+            font-weight: 800 !important;
             font-size: 1.8rem;
-            letter-spacing: -1px;
-            color: var(--primary-color) !important;
+            letter-spacing: -1.5px;
+            color: #3b82f6 !important;
+            text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .navbar-dark .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-dark .navbar-nav .nav-link:hover {
+            color: white;
+        }
+
+        .dropdown-menu {
+            background: var(--bg-dark);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin-top: 10px;
+        }
+
+        .dropdown-item {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.7rem 1.5rem;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
         }
 
         .main-content {
             min-height: calc(100vh - 160px);
+            padding-top:
+                <?php echo isset($no_padding) && $no_padding ? '0' : '76px'; ?>
+            ;
+            /* Offset for fixed navbar */
         }
     </style>
 </head>

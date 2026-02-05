@@ -1,482 +1,346 @@
-<?php include('header.php'); ?>
-<!-- Slider -->
-<div class="slider">
-   <div class="callbacks_container">
-      <ul class="rslides" id="slider">
-         <li>
-            <div class="w3layouts-banner-top w3layouts-banner-top1">
-               <div class="banner-dott">
-               <div class="container">
-                  <div class="slider-info">
-                     <div class="col-md-8">
-                        <h2>Well experienced</h2>
-                        <h4>Drivers</h4>
-                        <div class="w3ls-button">
-                           <a href="#" data-toggle="modal" data-target="#myModal">More About Our Service</a>
-                        </div>
-                        <div class="bannergrids">
-                        <div class="col-md-4 grid1">
-                              <i class="fa fa-taxi" aria-hidden="true"></i>
-                              <!-- <p>If you want to be happy for a lifetime,Drive a car</p> -->
-                           </div>
-                        
-                           <div class="col-md-4 grid1">
-                              <i class="fa fa-car" aria-hidden="true"></i>
-                              <p>You can know or not know how a car runs and still enjoy riding in a car</p>
-                           </div>
-                            <div class="col-md-4 grid1">
-                              <i class="fa fa-bus" aria-hidden="true"></i>
-                              <!-- <p>If you want to be happy for a lifetime,Drive a Car</p> -->
-                           </div> 
-                           <!-- <div class="col-md-4 grid1">
-                              <i class="fa fa-bus" aria-hidden="true"></i>
-                              <p>lorem ipsum dolor sit amet consectetur adipiscing</p>
-                           </div> -->
-                           <div class="clearfix"></div>
-                        </div>
-                     </div>
-                     <!-- <div class="col-md-4">
-                        <div class="banner-form-agileinfo">
-                           <h5>Need To <span>Transport</span>?</h5>
-                           <p>Ut enim ad minima veniam, quis nostrum 
-                              exerc ullam corporis nisi ut aliqui</p>
-                           <form action="#" method="post">
-                              <input type="text" class="email" name="name" placeholder="Name" required="">
-                              <input type="tel" class="tel" name="tel" placeholder="Phone Number" required="">
-                              <select class="form-control option-w3ls">
-                                    <option>Transport From</option>
-                                    <option>Albania</option>
-                                    <option>Belgium</option>
-                                    <option>Cameroon</option>
-                                    <option>Dominica</option>
-                                    <option>France</option>
-                                    <option>Jersey</option>
-                              </select>
-                              <select class="form-control option-w3ls">
-                                    <option>Transport To</option>
-                                    <option>Colombia</option>
-                                    <option>Indonesia</option>
-                                    <option>Japan</option>
-                                    <option>Lebanon</option>
-                                    <option>Luxembourg</option>
-                                    <option>Montserrat</option>
-                              </select>
-                              <input type="submit" class="hvr-shutter-in-vertical" value="Get started">     
-                           </form>
-                        </div>
-                     </div>  -->
-                  </div>
-               </div>
-               </div>
-            </div>
-         </li>
-         <li>
-            <div class="w3layouts-banner-top">
-               <div class="banner-dott">
-               <div class="container">
-                  <div class="slider-info">
-                     <div class="col-md-8">
-                        <h3>Trust and Safety</h3>
-                        <h4>comes important</h4>
-                        <div class="w3ls-button">
-                           <a href="#" data-toggle="modal" data-target="#myModal">More About Our Service</a>
-                        </div>
-                        <div class="bannergrids">
-                        <div class="col-md-4 grid1">
-                              <i class="fa fa-taxi" aria-hidden="true"></i>
-                              <!-- <p>If you want to be happy for a lifetime,Drive a car</p> -->
-                           </div>
-                        
-                           <div class="col-md-4 grid1">
-                              <i class="fa fa-car" aria-hidden="true"></i>
-                              <p>If you want to be happy for a lifetime,Drive a Car</p>
-                           </div>
-                            <div class="col-md-4 grid1">
-                              <i class="fa fa-bus" aria-hidden="true"></i>
-                              <!-- <p>If you want to be happy for a lifetime, Drive a Car</p> -->
-                           </div>
-                           <!-- <div class="col-md-4 grid1">
-                              <i class="fa fa-bus" aria-hidden="true"></i>
-                              <p>lorem ipsum dolor sit amet consectetur adipiscing</p>
-                           </div> -->
-                           <div class="clearfix"></div>
-                        </div>
-                     </div>
-                     <!-- <div class="col-md-4">
-                        <div class="banner-form-agileinfo">
-                           <h5>Need To <span>Transport</span>?</h5>
-                           <p>Ut enim ad minima veniam, quis nostrum 
-                              exerc ullam corporis nisi ut aliqui</p>
-                           <form action="#" method="post">
-                              <input type="text" class="email" name="name" placeholder="Name" required="">
-                              <input type="tel" class="tel" name="tel" placeholder="Phone Number" required="">
-                              <select class="form-control option-w3ls">
-                                    <option>Transport From</option>
-                                    <option>Albania</option>
-                                    <option>Belgium</option>
-                                    <option>Cameroon</option>
-                                    <option>Dominica</option>
-                                    <option>France</option>
-                                    <option>Jersey</option>
-                              </select>
-                              <select class="form-control option-w3ls">
-                                    <option>Transport To</option>
-                                    <option>Colombia</option>
-                                    <option>Indonesia</option>
-                                    <option>Japan</option>
-                                    <option>Lebanon</option>
-                                    <option>Luxembourg</option>
-                                    <option>Montserrat</option>
-                              </select>
-                              <input type="submit" class="hvr-shutter-in-vertical" value="Get started">     
-                           </form>
-                        </div>
-                     </div> -->
-                  </div>
-               </div>
-               </div>
-            </div>
-         </li>
-         <li>
-            <div class="w3layouts-banner-top w3layouts-banner-top3">
-               <div class="banner-dott">
-               <div class="container">
-                  <div class="slider-info">
-                     <div class="col-md-8">
-                        <h3>make your Dream </h3>
-                        <h4>come true</h4>
-                        <div class="w3ls-button">
-                           <a href="#" data-toggle="modal" data-target="#myModal">More About Our Service</a>
-                        </div>
-                        <div class="bannergrids">
-                        <div class="col-md-4 grid1">
-                              <i class="fa fa-taxi" aria-hidden="true"></i>
-                              <!-- <p>If you want to be happy for a lifetime,Drive a car</p> -->
-                           </div>
-                        
-                           <div class="col-md-4 grid1">
-                              <i class="fa fa-car" aria-hidden="true"></i>
-                              <p>You can know or not know how a car runs and still enjoy riding in a car</p>
-                           </div>
-                           <div class="col-md-4 grid1">
-                              <i class="fa fa-bus" aria-hidden="true"></i>
-                              <!-- <p>If you want to be happy for a lifetime,Drive a car</p> -->
-                           </div> 
-                           <!-- <div class="col-md-4 grid1">
-                              <i class="fa fa-bus" aria-hidden="true"></i>
-                              <p>lorem ipsum dolor sit amet consectetur adipiscing</p>
-                           </div> -->
-                           <div class="clearfix"></div>
-                        </div>
-                     </div>
-                     <!-- <div class="col-md-4">
-                        <div class="banner-form-agileinfo">
-                           <h5>Need To <span>Transport</span>?</h5>
-                           <p>Ut enim ad minima veniam, quis nostrum 
-                              exerc ullam corporis nisi ut aliqui</p>
-                           <form action="#" method="post">
-                              <input type="text" class="email" name="name" placeholder="Name" required="">
-                              <input type="tel" class="tel" name="tel" placeholder="Phone Number" required="">
-                              <select class="form-control option-w3ls">
-                                    <option>Transport From</option>
-                                    <option>Albania</option>
-                                    <option>Belgium</option>
-                                    <option>Cameroon</option>
-                                    <option>Dominica</option>
-                                    <option>France</option>
-                                    <option>Jersey</option>
-                              </select>
-                              <select class="form-control option-w3ls">
-                                    <option>Transport To</option>
-                                    <option>Colombia</option>
-                                    <option>Indonesia</option>
-                                    <option>Japan</option>
-                                    <option>Lebanon</option>
-                                    <option>Luxembourg</option>
-                                    <option>Montserrat</option>
-                              </select>
-                              <input type="submit" class="hvr-shutter-in-vertical" value="Get started">     
-                           </form>
-                        </div>
-                     </div> -->
-                  </div>
-               </div>
-               </div>
-            </div>
-         </li>
-         <li>
-            <div class="w3layouts-banner-top w3layouts-banner-top2">
-               <div class="banner-dott">
-               <div class="container">
-                  <div class="slider-info">
-                     <div class="col-md-8">
-                        <h3>Be a part of our </h3>
-                        <h4>Huge collection</h4>
-                        <div class="w3ls-button">
-                           <a href="#" data-toggle="modal" data-target="#myModal">More About Our Service</a>
-                        </div>
-                        <div class="bannergrids">
-                        <div class="col-md-4 grid1">
-                              <i class="fa fa-taxi" aria-hidden="true"></i>
-                              <!-- <p>If you want to be happy for a lifetime,Drive a car</p> -->
-                           </div>
-                        
-                           <div class="col-md-4 grid1">
-                              <i class="fa fa-car" aria-hidden="true"></i>
-                              <p>If you want to be happy for a lifetime,Drive a Car</p>
-                           </div>
-                           <div class="col-md-4 grid1">
-                              <i class="fa fa-bus" aria-hidden="true"></i>
-                              <!-- <p>If you want to be happy for a lifetime,Drive a Car</p> -->
-                           </div>
-                           <!-- <div class="col-md-4 grid1">
-                              <i class="fa fa-bus" aria-hidden="true"></i>
-                              <p>lorem ipsum dolor sit amet consectetur adipiscing</p>
-                           </div> -->
-                           <div class="clearfix"></div>
-                        </div>
-                     </div>
-                   <!--   <div class="col-md-4">
-                        <div class="banner-form-agileinfo">
-                           <h5>Need To <span>Transport</span>?</h5>
-                           <p>Ut enim ad minima veniam, quis nostrum 
-                              exerc ullam corporis nisi ut aliqui</p>
-                           <form action="#" method="post">
-                              <input type="text" class="email" name="name" placeholder="Name" required="">
-                              <input type="tel" class="tel" name="tel" placeholder="Phone Number" required="">
-                              <select class="form-control option-w3ls">
-                                    <option>Transport From</option>
-                                    <option>Albania</option>
-                                    <option>Belgium</option>
-                                    <option>Cameroon</option>
-                                    <option>Dominica</option>
-                                    <option>France</option>
-                                    <option>Jersey</option>
-                              </select>
-                              <select class="form-control option-w3ls">
-                                    <option>Transport To</option>
-                                    <option>Colombia</option>
-                                    <option>Indonesia</option>
-                                    <option>Japan</option>
-                                    <option>Lebanon</option>
-                                    <option>Luxembourg</option>
-                                    <option>Montserrat</option>
-                              </select>
-                              <input type="submit" class="hvr-shutter-in-vertical" value="Get started">     
-                           </form>
-                        </div>
-                     </div> -->
-                  </div>
-               </div>
-               </div>
-            </div>
-         </li>
-         
-         <li>
-            <div class="w3layouts-banner-top w3layouts-banner-top4">
-               <div class="banner-dott">
-               <div class="container">
-                  <div class="slider-info">
-                     <div class="col-md-8">
-                        <h3>Best in Collection</h3>
-                        <h4>Premium Cars</h4>
-                        <div class="w3ls-button">
-                           <a href="#" data-toggle="modal" data-target="#myModal">More About Our Service</a>
-                        </div>
-                        <div class="bannergrids">
-                        <div class="col-md-4 grid1">
-                              <i class="fa fa-taxi" aria-hidden="true"></i>
-                              <!-- <p>If you want to be happy for a lifetime,Drive a car</p> -->
-                           </div>
+<?php
+/**
+ * CAR2GO - Premium Landing Page
+ */
 
-                           <div class="col-md-4 grid1">
-                              <i class="fa fa-car" aria-hidden="true"></i>
-                              <p>You can know or not know how a car runs and still enjoy riding in a car</p>
-                           </div>
-                            <div class="col-md-4 grid1">
-                              <i class="fa fa-bus" aria-hidden="true"></i>
-                              <!-- <p>If you want to be happy for a lifetime,Drive a Car</p> -->
-                           </div> 
-                           <!-- <div class="col-md-4 grid1">
-                              <i class="fa fa-bus" aria-hidden="true"></i>
-                              <p>lorem ipsum dolor sit amet consectetur adipiscing</p>
-                           </div> -->
-                           <div class="clearfix"></div>
-                        </div>
-                     </div>
-                     <!-- <div class="col-md-4">
-                        <div class="banner-form-agileinfo">
-                           <h5>Need To <span>Transport</span>?</h5>
-                           <p>Ut enim ad minima veniam, quis nostrum 
-                              exerc ullam corporis nisi ut aliqui</p>
-                           <form action="#" method="post">
-                              <input type="text" class="email" name="name" placeholder="Name" required="">
-                              <input type="tel" class="tel" name="tel" placeholder="Phone Number" required="">
-                              <select class="form-control option-w3ls">
-                                    <option>Transport From</option>
-                                    <option>Albania</option>
-                                    <option>Belgium</option>
-                                    <option>Cameroon</option>
-                                    <option>Dominica</option>
-                                    <option>France</option>
-                                    <option>Jersey</option>
-                              </select>
-                              <select class="form-control option-w3ls">
-                                    <option>Transport To</option>
-                                    <option>Colombia</option>
-                                    <option>Indonesia</option>
-                                    <option>Japan</option>
-                                    <option>Lebanon</option>
-                                    <option>Luxembourg</option>
-                                    <option>Montserrat</option>
-                              </select>
-                              <input type="submit" class="hvr-shutter-in-vertical" value="Get started">     
-                           </form>
-                        </div>
-                     </div> -->
-                  </div>
-               </div>
-               </div>
-            </div>
-         </li>
-      </ul>
-   </div>
-   <div class="clearfix"></div>
-</div>
-<!-- //Slider -->          
-<!-- bootstrap-modal-pop-up -->
-   <div class="modal video-modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModal">
-      <div class="modal-dialog" role="document">
-         <div class="modal-content">
-            <div class="modal-header">
-               CAR2GO
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>                 
-            </div>
-               <div class="modal-body">
-                  <img src="images/bg3.jpg" alt=" " class="img-responsive" />
-                  <p>Our proposed Car2Go project develops a system that helps, users to get cars for rent and also to find the best drivers for their ride. The objective behind developing this system is to provide trusted and well experienced drivers.
-                     <!-- <i>" Quis autem vel eum iure reprehenderit qui in ea voluptate velit 
-                        esse quam nihil molestiae consequatur.</i></p> -->
-               </div>
+$page_title = 'Welcome to CAR2GO - Premium Car Rental & Driver Services';
+require_once 'templates/header.php';
+?>
+
+<style>
+   /* Hero Section */
+   .hero-section {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)), url('images/bg3.jpg');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      overflow: hidden;
+   }
+
+   .hero-content {
+      max-width: 800px;
+      text-align: center;
+      padding: 2rem;
+      z-index: 2;
+      animation: fadeInUp 1s ease-out;
+   }
+
+   .hero-title {
+      font-size: 4rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: -2px;
+      line-height: 1.1;
+   }
+
+   .hero-subtitle {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+      font-weight: 300;
+   }
+
+   .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 3rem;
+      box-shadow: var(--glass-shadow);
+   }
+
+   /* Action Buttons */
+   .btn-premium {
+      padding: 1rem 2.5rem;
+      font-weight: 600;
+      border-radius: 50px;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+   }
+
+   .btn-gradient {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: white;
+      border: none;
+   }
+
+   .btn-gradient:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4);
+      color: white;
+   }
+
+   .btn-outline-glass {
+      border: 1px solid white;
+      color: white;
+      background: transparent;
+   }
+
+   .btn-outline-glass:hover {
+      background: white;
+      color: var(--bg-dark);
+      transform: translateY(-5px);
+   }
+
+   /* Services Section */
+   .services-container {
+      padding: 6rem 0;
+      background: #f8fafc;
+   }
+
+   .section-title {
+      text-align: center;
+      margin-bottom: 4rem;
+   }
+
+   .section-title h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--bg-dark);
+   }
+
+   .section-title .divider {
+      width: 60px;
+      height: 4px;
+      background: var(--primary-color);
+      margin: 1.5rem auto;
+   }
+
+   .service-card {
+      background: white;
+      padding: 3rem;
+      border-radius: 24px;
+      text-align: center;
+      transition: all 0.4s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      border: 1px solid #f1f5f9;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+   }
+
+   .service-card:hover {
+      transform: translateY(-15px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      border-color: var(--accent-color);
+   }
+
+   .service-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 2rem;
+      background: #eff6ff;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--primary-color);
+      transition: all 0.3s ease;
+   }
+
+   .service-card:hover .service-icon {
+      background: var(--primary-color);
+      color: white;
+      transform: rotateY(180deg);
+   }
+
+   .service-card h3 {
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--bg-dark);
+   }
+
+   /* Floating Animations */
+   @keyframes fadeInUp {
+      from {
+         opacity: 0;
+         transform: translateY(40px);
+      }
+
+      to {
+         opacity: 1;
+         transform: translateY(0);
+      }
+   }
+
+   /* Features Section */
+   .features-section {
+      background: var(--bg-dark);
+      color: white;
+      padding: 6rem 0;
+      position: relative;
+   }
+
+   .feature-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 2rem;
+   }
+
+   .feature-check {
+      width: 32px;
+      height: 32px;
+      background: var(--primary-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1.5rem;
+      font-size: 0.8rem;
+   }
+
+   .feature-text h4 {
+      margin-bottom: 0.2rem;
+      font-weight: 600;
+   }
+
+   .feature-text p {
+      opacity: 0.7;
+      font-size: 0.9rem;
+   }
+
+   /* Responsive adjustments */
+   @media (max-width: 768px) {
+      .hero-title {
+         font-size: 2.5rem;
+      }
+
+      .hero-subtitle {
+         font-size: 1.1rem;
+      }
+   }
+</style>
+
+<!-- Hero Section -->
+<section class="hero-section">
+   <div class="hero-content">
+      <div class="glass-card">
+         <h1 class="hero-title">Experience the Journey, Redefined.</h1>
+         <p class="hero-subtitle">Premium Car Rentals & Professional Driver Services at your fingertips. Luxury,
+            comfort, and reliability for every destination.</p>
+         <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
+            <a href="viewcars.php" class="btn btn-premium btn-gradient mb-3 mb-md-0 mx-2">
+               <i class="fas fa-car mr-2"></i> Find a Car
+            </a>
+            <a href="login.php" class="btn btn-premium btn-outline-glass mx-2">
+               <i class="fas fa-key mr-2"></i> Join Us
+            </a>
          </div>
       </div>
    </div>
-<!-- //bootstrap-modal-pop-up --> 
+</section>
 
+<!-- Services Section -->
+<section class="services-container">
+   <div class="container">
+      <div class="section-title">
+         <h2>Our Premium Services</h2>
+         <div class="divider"></div>
+         <p class="text-muted">We provide a wide range of logistics and transport solutions tailored to your needs.</p>
+      </div>
 
+      <div class="row">
+         <div class="col-lg-4 col-md-6 mb-4">
+            <div class="service-card">
+               <div class="service-icon">
+                  <i class="fas fa-taxi"></i>
+               </div>
+               <h3>Car Rental</h3>
+               <p class="text-muted">Wide selection of luxury and economy cars for your journeys. Self-drive or with a
+                  chauffeur.</p>
+               <a href="viewcars.php" class="text-primary font-weight-bold mt-3 d-inline-block">View Collection <i
+                     class="fas fa-arrow-right ml-1"></i></a>
+            </div>
+         </div>
 
+         <div class="col-lg-4 col-md-6 mb-4">
+            <div class="service-card">
+               <div class="service-icon">
+                  <i class="fas fa-user-tie"></i>
+               </div>
+               <h3>Driver Booking</h3>
+               <p class="text-muted">Professional, vetted, and experienced drivers for your personal or commercial
+                  vehicle.</p>
+               <a href="viewdriv.php" class="text-primary font-weight-bold mt-3 d-inline-block">Book Now <i
+                     class="fas fa-arrow-right ml-1"></i></a>
+            </div>
+         </div>
 
-<!-- footer -->
-   <footer>
-      
-      <div class="copyright">
-         <div class="container">
-            <p>© 2023 CAR2GO. All rights reserved | Design by starinnovations</p>
+         <div class="col-lg-4 col-md-6 mb-4">
+            <div class="service-card">
+               <div class="service-icon">
+                  <i class="fas fa-tools"></i>
+               </div>
+               <h3>Service Center</h3>
+               <p class="text-muted">Expert vehicle maintenance, repairs, and diagnostics from our trusted partner
+                  centers.</p>
+               <a href="viewservicee1.php" class="text-primary font-weight-bold mt-3 d-inline-block">Find Centers <i
+                     class="fas fa-arrow-right ml-1"></i></a>
+            </div>
          </div>
       </div>
-   </footer>
-   <!-- //footer -->
+   </div>
+</section>
 
+<!-- Features Section -->
+<section class="features-section">
+   <div class="container">
+      <div class="row align-items-center">
+         <div class="col-lg-6">
+            <div class="pr-lg-5">
+               <h2 class="mb-4 display-4 font-weight-bold">Why Choose CAR2GO?</h2>
+               <p class="mb-5 lead opacity-8">We focus on trust and safety above everything else, ensuring every ride is
+                  a premium experience.</p>
 
+               <div class="feature-item">
+                  <div class="feature-check">
+                     <i class="fas fa-check"></i>
+                  </div>
+                  <div class="feature-text">
+                     <h4>Trusted Drivers</h4>
+                     <p>Every driver goes through extensive background checks and professional training.</p>
+                  </div>
+               </div>
 
-<!-- js-scripts -->              
-<!-- js -->
-   <script type="text/javascript" src="js/jquery-2.1.4.min.js"></script>
-   <script type="text/javascript" src="js/bootstrap.js"></script> <!-- Necessary-JavaScript-File-For-Bootstrap --> 
-<!-- //js -->  
+               <div class="feature-item">
+                  <div class="feature-check">
+                     <i class="fas fa-shield-alt"></i>
+                  </div>
+                  <div class="feature-text">
+                     <h4>24/7 Safety Support</h4>
+                     <p>Our team is available round the clock to ensure your safety and comfort.</p>
+                  </div>
+               </div>
 
-<!-- start-smoth-scrolling -->
-<script src="js/SmoothScroll.min.js"></script>
-<script type="text/javascript" src="js/move-top.js"></script>
-<script type="text/javascript" src="js/easing.js"></script>
-<script type="text/javascript">
-   jQuery(document).ready(function($) {
-      $(".scroll").click(function(event){    
-         event.preventDefault();
-         $('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
-      });
-   });
-</script>
-<!-- here stars scrolling icon -->
-   <script type="text/javascript">
-      $(document).ready(function() {
-         /*
-            var defaults = {
-            containerID: 'toTop', // fading element id
-            containerHoverID: 'toTopHover', // fading element hover id
-            scrollSpeed: 1200,
-            easingType: 'linear' 
-            };
-         */
-                        
-         $().UItoTop({ easingType: 'easeOutQuart' });
-                        
-         });
-   </script>
-   <!-- //here ends scrolling icon -->
-<!-- start-smoth-scrolling -->
+               <div class="feature-item">
+                  <div class="feature-check">
+                     <i class="fas fa-medal"></i>
+                  </div>
+                  <div class="feature-text">
+                     <h4>Premium Collection</h4>
+                     <p>Access to exclusively maintained, high-end vehicle fleet for all occasions.</p>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="col-lg-6 mt-5 mt-lg-0">
+            <div class="glass-card" style="padding: 1rem; overflow: hidden; border-radius: 30px;">
+               <img src="images/bg2.jpg" alt="Premium Experience" class="img-fluid"
+                  style="border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
 
-<!-- Baneer-js -->
-   <script src="js/responsiveslides.min.js"></script>
-   <script>
-      $(function () {
-         $("#slider").responsiveSlides({
-            auto: true,
-            pager:false,
-            nav: true,
-            speed: 1000,
-            namespace: "callbacks",
-            before: function () {
-               $('.events').append("<li>before event fired.</li>");
-            },
-            after: function () {
-               $('.events').append("<li>after event fired.</li>");
-            }
-         });
-      });
-   </script>
-<!-- //Baneer-js -->
-
-<!-- banner bottom video script -->
-<script src="js/simplePlayer.js"></script>
-         <script>
-            $("document").ready(function() {
-               $("#video").simplePlayer();
-            });
-</script>
-<!-- //banner bottom video script -->
-
-<!-- Stats-Number-Scroller-Animation-JavaScript -->
-            <script src="js/waypoints.min.js"></script> 
-            <script src="js/counterup.min.js"></script> 
-            <script>
-               jQuery(document).ready(function( $ ) {
-                  $('.counter').counterUp({
-                     delay: 100,
-                     time: 1000
-                  });
-               });
-            </script>
-<!-- //Stats-Number-Scroller-Animation-JavaScript -->
-
-
-<!-- FlexSlider-JavaScript -->
-   <script defer src="js/jquery.flexslider.js"></script>
-   <script type="text/javascript">
-      $(function(){
-         SyntaxHighlighter.all();
-            });
-            $(window).load(function(){
-            $('.flexslider').flexslider({
-               animation: "slide",
-               start: function(slider){
-                  $('body').removeClass('loading');
-               }
-         });
-      });
-   </script>
-<!-- //FlexSlider-JavaScript -->
-
-<!-- //js-scripts -->
-</body>
-</html>
+<?php require_once 'templates/footer.php'; ?>

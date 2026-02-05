@@ -336,4 +336,8 @@ This application is fully responsive and works on:
 
 ---
 
+<<<<<<< HEAD
 **Made with ❤️ by Star Innovations**
+=======
+**Made with ❤️ by Star Innovations**
+>>>>>>> 9babe1456a7b9fad04fbb88d14192abb27ed853f

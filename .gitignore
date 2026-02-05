@@ -1,0 +1,88 @@
+# Ignore vendor and dependency directories
+vendor/
+node_modules/
+
+# Ignore environment files
+.env
+.env.local
+.env.*.local
+
+# Ignore uploaded files
+uploads/*
+!uploads/.gitkeep
+uploads/cars/*
+!uploads/cars/.gitkeep
+uploads/drivers/*
+!uploads/drivers/.gitkeep
+uploads/services/*
+!uploads/services/.gitkeep
+uploads/documents/*
+!uploads/documents/.gitkeep
+
+# Ignore old PHP images folder (use uploads/ instead)
+images/*.jpg
+images/*.jpeg
+images/*.png
+images/*.gif
+images/*.webp
+images/*.jfif
+!images/bg*.jpg
+!images/bg*.jpeg
+!images/*.png
+
+# Ignore logs
+*.log
+logs/
+error_log
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.sublime-*
+*.swp
+*.swo
+*~
+
+# Ignore backup files
+*.bak
+*.backup
+*.old
+*.tmp
+*~
+
+# Ignore compressed files
+*.zip
+*.rar
+*.7z
+*.tar.gz
+
+# Ignore documentation temp files
+*.docx
+*.pdf
+!docs/*.pdf
+
+# Ignore screenshots
+Screenshot*.png
+WhatsApp*.jpg
+WhatsApp*.jpeg
+
+# Ignore cache
+cache/
+*.cache
+
+# Ignore session files
+sessions/
+tmp/
+
+# Ignore compiled files
+*.compiled
+
+# Keep important directories
+!uploads/
+!database/
+!docs/

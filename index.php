@@ -12,6 +12,10 @@ $total_drivers = db_fetch_one($con, "SELECT COUNT(*) as count FROM driver_reg")[
 $total_partners = db_fetch_one($con, "SELECT COUNT(*) as count FROM service_reg")['count'] ?? 0;
 $total_users = db_fetch_one($con, "SELECT COUNT(*) as count FROM login WHERE l_type = 'user'")['count'] ?? 0;
 
+// Fetch Featured Cars (Random 3 Approved)
+$featured_cars_query = "SELECT * FROM rent WHERE r_status = 'approve' ORDER BY RAND() LIMIT 3";
+$featured_cars = db_fetch_all($con, $featured_cars_query);
+
 $no_padding = true;
 $page_title = 'Welcome to CAR2GO - Premium Car Rental & Driver Services';
 require_once 'templates/header.php';
@@ -333,6 +337,43 @@ require_once 'templates/header.php';
       margin-right: 1.5rem;
       font-size: 0.8rem;
    }
+
+   /* Mobile Optimization */
+   @media (max-width: 768px) {
+      .hero-title {
+         font-size: 2.5rem !important;
+         letter-spacing: -1px;
+         line-height: 1.2;
+      }
+
+      .hero-subtitle {
+         font-size: 1rem !important;
+         padding: 0 10px;
+         margin-bottom: 1.5rem;
+      }
+
+      .btn-premium {
+         padding: 0.8rem 2rem;
+         font-size: 0.9rem;
+         margin: 5px;
+         display: block;
+         width: 100%;
+      }
+
+      .section-title h2 {
+         font-size: 2rem;
+      }
+
+      .service-card {
+         padding: 2rem;
+         margin-bottom: 1.5rem;
+      }
+
+      .feature-card {
+         min-height: auto;
+         margin-bottom: 1.5rem;
+      }
+   }
 </style>
 
 <!-- Hero Carousel -->
@@ -366,10 +407,11 @@ require_once 'templates/header.php';
       <div class="item" style="background-image: url('images/bg7.jpg');">
          <div class="container d-flex align-items-center justify-content-center h-100 text-center">
             <div class="hero-content">
-               <h1 class="hero-title">Elite Chauffeur <br><span>Services</span></h1>
-               <p class="hero-subtitle">Professional, vetted, and experienced drivers for your personal or commercial
+               <h1 class="hero-title animate__animated animate__fadeInUp">Elite Chauffeur <br><span>Services</span></h1>
+               <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">Professional, vetted, and
+                  experienced drivers for your personal or commercial
                   vehicle. Your safety is our priority.</p>
-               <div class="mt-4" style="margin-top: 2rem;">
+               <div class="mt-4 animate__animated animate__fadeInUp animate__delay-2s" style="margin-top: 2rem;">
                   <a href="viewdriv.php" class="btn btn-premium btn-gradient">Hire a Driver</a>
                </div>
             </div>
@@ -380,10 +422,11 @@ require_once 'templates/header.php';
       <div class="item" style="background-image: url('images/bg8.jpg');">
          <div class="container d-flex align-items-center justify-content-center h-100 text-center">
             <div class="hero-content">
-               <h1 class="hero-title">Global Service <br><span>Network</span></h1>
-               <p class="hero-subtitle">Expert vehicle maintenance and diagnostics from our trusted partner centers.
+               <h1 class="hero-title animate__animated animate__fadeInUp">Global Service <br><span>Network</span></h1>
+               <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">Expert vehicle maintenance
+                  and diagnostics from our trusted partner centers.
                   Keep your car in peak condition.</p>
-               <div class="mt-4" style="margin-top: 2rem;">
+               <div class="mt-4 animate__animated animate__fadeInUp animate__delay-2s" style="margin-top: 2rem;">
                   <a href="viewservicee1.php" class="btn btn-premium btn-gradient">Find a Center</a>
                </div>
             </div>
@@ -402,6 +445,46 @@ require_once 'templates/header.php';
       <span class="sr-only">Next</span>
    </a>
 </div>
+
+<!-- Stats Counter Section -->
+<section class="stats-section" style="padding: 40px 0; background: #fff; border-bottom: 1px solid #eef2f6;">
+   <div class="container">
+      <div class="row text-center">
+         <div class="col-md-3 col-xs-6 mb-4 mb-md-0">
+            <div class="stat-item" style="padding: 20px;">
+               <div class="h2 font-weight-bold mb-1" style="color: #2563eb; margin: 0;">
+                  <?php echo number_format($total_cars); ?>+
+               </div>
+               <div class="text-muted small text-uppercase tracking-widest">Vehicles</div>
+            </div>
+         </div>
+         <div class="col-md-3 col-xs-6 mb-4 mb-md-0">
+            <div class="stat-item" style="padding: 20px;">
+               <div class="h2 font-weight-bold mb-1" style="color: #2563eb; margin: 0;">
+                  <?php echo number_format($total_drivers); ?>+
+               </div>
+               <div class="text-muted small text-uppercase tracking-widest">Elite Drivers</div>
+            </div>
+         </div>
+         <div class="col-md-3 col-xs-6 mb-4 mb-md-0">
+            <div class="stat-item" style="padding: 20px;">
+               <div class="h2 font-weight-bold mb-1" style="color: #2563eb; margin: 0;">
+                  <?php echo number_format($total_partners); ?>+
+               </div>
+               <div class="text-muted small text-uppercase tracking-widest">Service Centers</div>
+            </div>
+         </div>
+         <div class="col-md-3 col-xs-6 mb-4 mb-md-0">
+            <div class="stat-item" style="padding: 20px;">
+               <div class="h2 font-weight-bold mb-1" style="color: #2563eb; margin: 0;">
+                  <?php echo number_format($total_users); ?>+
+               </div>
+               <div class="text-muted small text-uppercase tracking-widest">Happy Clients</div>
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
 
 <!-- Services Section -->
 <section class="services-container">
@@ -455,56 +538,148 @@ require_once 'templates/header.php';
    </div>
 </section>
 
+<!-- Featured Vehicles Section (Dynamic) -->
+<?php if (!empty($featured_cars)): ?>
+   <section class="featured-section" style="padding: 80px 0; background: #f8fafc;">
+      <div class="container">
+         <div class="text-center mb-5 section-title">
+            <h2 class="font-weight-bold" style="color: #0f172a;">Featured Vehicles</h2>
+            <div class="divider"></div>
+            <p class="text-muted">Handpicked premium cars available for your next journey.</p>
+         </div>
+
+         <div class="row">
+            <?php foreach ($featured_cars as $car): ?>
+               <div class="col-md-4 col-sm-6 mb-4">
+                  <div class="card border-0 shadow-sm h-100"
+                     style="border-radius: 16px; overflow: hidden; transition: transform 0.3s; background: white; margin-bottom: 30px;">
+                     <div style="height: 200px; background: #f1f5f9; overflow: hidden; position: relative;">
+                        <img src="uploads/cars/<?php echo htmlspecialchars($car['r_car']); ?>"
+                           alt="<?php echo htmlspecialchars($car['r_mname']); ?>"
+                           style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="position-absolute"
+                           style="top: 15px; right: 15px; background: rgba(0,0,0,0.6); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem;">
+                           <?php echo htmlspecialchars($car['r_year']); ?>
+                        </div>
+                     </div>
+                     <div class="card-body p-4"
+                        style="border: 1px solid #e2e8f0; border-top: none; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">
+                        <h4 class="font-weight-bold mb-1" style="color: #0f172a; margin-top: 0;">
+                           <?php echo htmlspecialchars($car['r_company'] . ' ' . $car['r_mname']); ?>
+                        </h4>
+                        <p class="text-muted small mb-3"><i class="fas fa-map-marker-alt mr-1"></i>
+                           <?php echo htmlspecialchars($car['r_pincode']); ?></p>
+                        <div class="d-flex justify-content-between align-items-center mt-3"
+                           style="display: flex; justify-content: space-between; align-items: center;">
+                           <span class="text-primary font-weight-bold"
+                              style="font-size: 1.2rem;">₹<?php echo number_format($car['rent_amt']); ?><small
+                                 class="text-muted">/day</small></span>
+                           <a href="viewcars.php" class="btn btn-sm btn-outline-primary rounded-pill px-4"
+                              style="border-radius: 50px; border: 1px solid #3b82f6; padding: 8px 20px;">Book Now</a>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            <?php endforeach; ?>
+         </div>
+
+         <div class="text-center mt-5">
+            <a href="viewcars.php" class="btn btn-premium btn-gradient">View All Cars</a>
+         </div>
+      </div>
+   </section>
+<?php endif; ?>
+
 <!-- Features Section -->
-<section class="features-section">
+<section class="features-section" style="background: #fff; padding: 80px 0;">
    <div class="container">
-      <div class="row align-items-center">
-         <div class="col-lg-6">
-            <div class="pr-lg-5">
-               <h2 class="mb-4 display-4 font-weight-bold">Why Choose CAR2GO?</h2>
-               <p class="mb-5 lead opacity-8">We focus on trust and safety above everything else, ensuring every ride is
-                  a premium experience.</p>
+      <div class="text-center mb-5">
+         <h2 class="font-weight-bold" style="color: #0f172a; font-size: 2.5rem;">Why Choose CAR2GO?</h2>
+         <p class="text-muted" style="max-width: 600px; margin: 0 auto; font-size: 1.1rem;">We prioritize your safety,
+            comfort, and time. Experience the difference with our premium fleet and professional service.</p>
+         <div style="width: 60px; height: 4px; background: #2563eb; margin: 20px auto;"></div>
+      </div>
 
-               <div class="feature-item">
-                  <div class="feature-check">
-                     <i class="fas fa-check"></i>
-                  </div>
-                  <div class="feature-text">
-                     <h4>Trusted Drivers</h4>
-                     <p>Every driver goes through extensive background checks and professional training.</p>
-                  </div>
+      <div class="row">
+         <!-- Feature 1 -->
+         <div class="col-md-4 mb-4">
+            <div class="feature-card h-100">
+               <div class="icon-wrapper mb-4">
+                  <i class="fas fa-user-shield"></i>
                </div>
-
-               <div class="feature-item">
-                  <div class="feature-check">
-                     <i class="fas fa-shield-alt"></i>
-                  </div>
-                  <div class="feature-text">
-                     <h4>24/7 Safety Support</h4>
-                     <p>Our team is available round the clock to ensure your safety and comfort.</p>
-                  </div>
-               </div>
-
-               <div class="feature-item">
-                  <div class="feature-check">
-                     <i class="fas fa-medal"></i>
-                  </div>
-                  <div class="feature-text">
-                     <h4>Premium Collection</h4>
-                     <p>Access to exclusively maintained, high-end vehicle fleet for all occasions.</p>
-                  </div>
-               </div>
+               <h4 class="font-weight-bold mb-3" style="color: #0f172a;">Trusted Drivers</h4>
+               <p class="text-muted">Every driver undergoes rigorous background checks, professional training, and
+                  regular evaluations to ensure your safety.</p>
             </div>
          </div>
-         <div class="col-lg-6 mt-5 mt-lg-0">
-            <div class="glass-card" style="padding: 1rem; overflow: hidden; border-radius: 30px;">
-               <img src="images/bg2.jpg" alt="Premium Experience" class="img-fluid"
-                  style="border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+
+         <!-- Feature 2 -->
+         <div class="col-md-4 mb-4">
+            <div class="feature-card h-100">
+               <div class="icon-wrapper mb-4">
+                  <i class="fas fa-headset"></i>
+               </div>
+               <h4 class="font-weight-bold mb-3" style="color: #0f172a;">24/7 Support</h4>
+               <p class="text-muted">Our dedicated support team is available round the clock to assist you with
+                  bookings, queries, and emergency roadside assistance.</p>
+            </div>
+         </div>
+
+         <!-- Feature 3 -->
+         <div class="col-md-4 mb-4">
+            <div class="feature-card h-100">
+               <div class="icon-wrapper mb-4">
+                  <i class="fas fa-gem"></i>
+               </div>
+               <h4 class="font-weight-bold mb-3" style="color: #0f172a;">Premium Fleet</h4>
+               <p class="text-muted">Choose from our exclusive collection of high-end vehicles, regularly maintained and
+                  detailed for a pristine experience.</p>
             </div>
          </div>
       </div>
    </div>
 </section>
+
+<style>
+   /* Feature Cards */
+   .feature-card {
+      background: #f8fafc;
+      padding: 40px 30px;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+      min-height: 300px;
+      /* Ensure uniform height */
+   }
+
+   .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      background: #fff;
+      border-color: #2563eb;
+   }
+
+   .icon-wrapper {
+      width: 70px;
+      height: 70px;
+      background: #eff6ff;
+      color: #2563eb;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto;
+      transition: all 0.3s ease;
+   }
+
+   .feature-card:hover .icon-wrapper {
+      background: #2563eb;
+      color: #fff;
+      transform: scale(1.1);
+   }
+</style>
 
 <script>
    $(document).ready(function () {

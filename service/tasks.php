@@ -14,9 +14,15 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
     $action = $_GET['action'];
     $new_status = ($action === 'approve') ? 'Approved' : (($action === 'complete') ? 'Completed' : 'Rejected');
 
-    $q = "UPDATE servicereq SET status = ? WHERE id = ? AND s_id = ?";
-    if (db_execute($con, $q, "sii", [$new_status, $id, $l_id])) {
-        redirect_with_message('tasks.php', 'Service status updated.', 'success');
+    // Verify ownership
+    $check_q = "SELECT id FROM servicereq WHERE id = ? AND s_id = ?";
+    if (db_fetch_one($con, $check_q, "ii", [$id, $l_id])) {
+        $q = "UPDATE servicereq SET status = ? WHERE id = ?";
+        if (db_execute($con, $q, "si", [$new_status, $id])) {
+            redirect_with_message('tasks.php', 'Service request updated.', 'success');
+        }
+    } else {
+        redirect_with_message('tasks.php', 'Unauthorized action.', 'danger');
     }
 }
 
@@ -33,72 +39,102 @@ $base_url = '../';
 include '../templates/header.php';
 ?>
 
-<div class="container py-5">
-    <div class="mb-5">
-        <h1 class="font-weight-bold">Service <span class="text-primary">Tasks</span></h1>
-        <p class="text-muted">Manage vehicle maintenance requests and ongoing repair tasks.</p>
+<div class="page-hero py-5"
+    style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); color: white; margin-top:-20px; border-radius: 0 0 40px 40px;">
+    <div class="container text-center">
+        <h1 class="display-4 font-weight-bold mb-2">Service Queue</h1>
+        <p class="opacity-7">Track vehicle maintenance and repair jobs.</p>
     </div>
+</div>
 
-    <div class="card border-0 shadow-sm rounded-xl overflow-hidden">
+<div class="container py-5 mt-n5">
+    <div class="card border-0 shadow-lg rounded-xl overflow-hidden">
         <div class="table-responsive">
-            <table class="table table-hover mb-0">
+            <table class="table table-hover mb-0 align-middle">
                 <thead class="bg-light">
                     <tr>
-                        <th class="py-3 px-4">Vehicle & Service</th>
-                        <th class="py-3">Customer</th>
-                        <th class="py-3">Requested Date</th>
-                        <th class="py-3">Status</th>
-                        <th class="py-3 text-right px-4">Actions</th>
+                        <th class="py-4 px-4 border-0 text-uppercase small font-weight-bold text-muted">Vehicle Details
+                        </th>
+                        <th class="py-4 border-0 text-uppercase small font-weight-bold text-muted">Customer</th>
+                        <th class="py-4 border-0 text-uppercase small font-weight-bold text-muted">Date & Note</th>
+                        <th class="py-4 border-0 text-uppercase small font-weight-bold text-center text-muted">Status
+                        </th>
+                        <th class="py-4 px-4 border-0 text-uppercase small font-weight-bold text-right text-muted">
+                            Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($tasks as $task): ?>
                         <tr>
                             <td class="align-middle px-4">
-                                <div class="font-weight-bold">
-                                    <?php echo e($task['v_name']); ?>
-                                </div>
-                                <div class="small text-muted">
-                                    <?php echo e($task['s_name']); ?>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-light rounded p-3 mr-3 text-primary">
+                                        <i class="fas fa-car-crash fa-lg"></i>
+                                    </div>
+                                    <div>
+                                        <div class="font-weight-bold text-dark"><?php echo e($task['v_name']); ?></div>
+                                        <div class="small text-muted"><?php echo e($task['s_name']); ?></div>
+                                    </div>
                                 </div>
                             </td>
                             <td class="align-middle">
-                                <div class="font-weight-bold small">
-                                    <?php echo e($task['customer_name']); ?>
-                                </div>
-                                <div class="extra-small text-muted">
-                                    <?php echo e($task['u_phone']); ?>
-                                </div>
-                            </td>
-                            <td class="align-middle small">
-                                <?php echo $task['date']; ?>
+                                <div class="font-weight-bold text-dark"><?php echo e($task['customer_name']); ?></div>
+                                <div class="small text-muted"><i class="fas fa-phone-alt mr-1"></i>
+                                    <?php echo e($task['u_phone']); ?></div>
                             </td>
                             <td class="align-middle">
-                                <span class="badge badge-<?php
-                                echo ($task['status'] === 'Approved') ? 'info' : (($task['status'] === 'Completed') ? 'success' : 'warning');
-                                ?> pill px-3">
-                                    <?php echo e($task['status']); ?>
+                                <div class="text-dark small font-weight-bold">
+                                    <?php echo date('M d, Y', strtotime($task['date'])); ?></div>
+                                <div class="small text-muted text-truncate" style="max-width: 150px;"
+                                    title="<?php echo e($task['rev']); ?>">
+                                    "<?php echo e($task['rev']); ?>"
+                                </div>
+                            </td>
+                            <td class="align-middle text-center">
+                                <?php
+                                $s_class = match ($task['status']) {
+                                    'Approved' => 'info',
+                                    'Completed' => 'success',
+                                    'Pending' => 'warning',
+                                    default => 'secondary'
+                                };
+                                $s_icon = match ($task['status']) {
+                                    'Approved' => 'fa-spinner fa-spin',
+                                    'Completed' => 'fa-check',
+                                    'Pending' => 'fa-clock',
+                                    default => 'fa-circle'
+                                };
+                                ?>
+                                <span class="badge badge-<?php echo $s_class; ?> pill px-3 py-2">
+                                    <i class="fas <?php echo $s_icon; ?> mr-1 small"></i> <?php echo e($task['status']); ?>
                                 </span>
                             </td>
                             <td class="align-middle text-right px-4">
                                 <?php if ($task['status'] === 'Pending'): ?>
                                     <a href="tasks.php?action=approve&id=<?php echo $task['id']; ?>"
-                                        class="btn btn-sm btn-outline-primary rounded-pill mr-1">Approve</a>
+                                        class="btn btn-sm btn-primary rounded-pill px-3 mr-1 shadow-sm font-weight-bold">Approve</a>
                                     <a href="tasks.php?action=reject&id=<?php echo $task['id']; ?>"
-                                        class="btn btn-sm btn-link text-danger"
-                                        onclick="return confirm('Reject this request?')">Reject</a>
+                                        class="btn btn-sm btn-light text-danger rounded-circle"
+                                        onclick="return confirm('Reject this request?')" title="Reject">
+                                        <i class="fas fa-times"></i>
+                                    </a>
                                 <?php elseif ($task['status'] === 'Approved'): ?>
                                     <a href="tasks.php?action=complete&id=<?php echo $task['id']; ?>"
-                                        class="btn btn-sm btn-success rounded-pill px-3">Mark Complete</a>
+                                        class="btn btn-sm btn-success rounded-pill px-3 shadow-sm font-weight-bold">Mark
+                                        Done</a>
                                 <?php else: ?>
-                                    <span class="text-muted small"><i class="fas fa-check-double"></i> Finished</span>
+                                    <span class="text-muted small italic"><i class="fas fa-check-double text-success"></i>
+                                        Closed</span>
                                 <?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                     <?php if (empty($tasks)): ?>
                         <tr>
-                            <td colspan="5" class="text-center py-5 text-muted">No service tasks found.</td>
+                            <td colspan="5" class="text-center py-5">
+                                <img src="../images/empty-state.svg" width="80" class="mb-3 opacity-5">
+                                <h5 class="text-muted">No service requests.</h5>
+                            </td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -112,12 +148,8 @@ include '../templates/header.php';
         border-radius: 1.5rem;
     }
 
-    .extra-small {
-        font-size: 0.65rem;
-    }
-
     .pill {
-        border-radius: 30px;
+        border-radius: 50px;
     }
 </style>
 

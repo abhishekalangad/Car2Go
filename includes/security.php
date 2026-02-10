@@ -292,4 +292,39 @@ function date_diff_days($date1, $date2)
     $interval = $datetime1->diff($datetime2);
     return $interval->days;
 }
+
+/**
+ * Get display name for current logged in user
+ * Fetches from respective registration tables
+ * 
+ * @param mysqli $con Database connection
+ * @return string User display name
+ */
+function get_user_display_name($con)
+{
+    if (!is_logged_in())
+        return 'Guest';
+
+    $l_id = $_SESSION['l_id'];
+    $l_type = $_SESSION['l_type'];
+
+    switch ($l_type) {
+        case 'admin':
+            return 'Administrator';
+        case 'user':
+            $data = db_fetch_one($con, "SELECT u_name FROM user_reg WHERE ul_id = ?", "i", [$l_id]);
+            return $data['u_name'] ?? 'User';
+        case 'driver':
+            $data = db_fetch_one($con, "SELECT d_name FROM driver_reg WHERE dl_id = ?", "i", [$l_id]);
+            return $data['d_name'] ?? 'Driver';
+        case 'service center':
+            $data = db_fetch_one($con, "SELECT s_name FROM service_reg WHERE sl_id = ?", "i", [$l_id]);
+            return $data['s_name'] ?? 'Partner';
+        case 'employe':
+            $data = db_fetch_one($con, "SELECT e_name FROM emp_reg WHERE el_id = ?", "i", [$l_id]);
+            return $data['e_name'] ?? 'Employee';
+        default:
+            return $_SESSION['l_email'] ?? 'User';
+    }
+}
 ?>

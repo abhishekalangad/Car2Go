@@ -50,13 +50,25 @@ $page_title = 'Secure Payment - CAR2GO';
 include 'templates/header.php';
 ?>
 
-<div class="hero-section py-5" style="background: var(--bg-dark); color: white;">
-  <div class="container text-center">
-    <h2 class="font-weight-bold">Secure <span class="text-primary">Checkout</span></h2>
-    <p class="opacity-7">Complete your payment for <?php echo e($booking['r_company']); ?>
-      <?php echo e($booking['r_mname']); ?></p>
+<div class="page-hero">
+  <div class="container hero-content text-center">
+    <h1 class="font-weight-bold mb-2 animate__animated animate__fadeInDown">Secure <span
+        class="text-primary">Checkout</span></h1>
+    <p class="lead text-white-50 animate__animated animate__fadeInUp">Complete your payment for
+      <?php echo e($booking['r_company']); ?> <?php echo e($booking['r_mname']); ?>
+    </p>
   </div>
 </div>
+
+<style>
+  .page-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    padding: 5rem 0 8rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+</style>
 
 <div class="container py-5 mt-n5">
   <div class="row justify-content-center">
@@ -86,8 +98,8 @@ include 'templates/header.php';
             <div class="form-group mb-4">
               <label class="small font-weight-bold text-muted uppercase">Card Number</label>
               <div class="input-group">
-                <input type="text" class="form-control bg-light border-0" placeholder="0000 0000 0000 0000"
-                  maxlength="19">
+                <input type="text" name="card_number" class="form-control bg-light border-0"
+                  placeholder="0000 0000 0000 0000" maxlength="19">
                 <div class="input-group-append">
                   <span class="input-group-text bg-light border-0"><i class="fas fa-credit-card text-muted"></i></span>
                 </div>
@@ -97,11 +109,11 @@ include 'templates/header.php';
             <div class="row">
               <div class="col-7 form-group mb-4">
                 <label class="small font-weight-bold text-muted uppercase">Expiry Date</label>
-                <input type="text" class="form-control bg-light border-0" placeholder="MM / YY">
+                <input type="text" name="expiry" class="form-control bg-light border-0" placeholder="MM / YY">
               </div>
               <div class="col-5 form-group mb-4">
                 <label class="small font-weight-bold text-muted uppercase">CVV</label>
-                <input type="password" class="form-control bg-light border-0" placeholder="***">
+                <input type="password" name="cvv" class="form-control bg-light border-0" placeholder="***">
               </div>
             </div>
 

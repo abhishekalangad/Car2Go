@@ -1,18 +1,22 @@
 <?php
 session_start();
-include("db_connect.php");
-if(isset($_GET['sl_id']))
-{
-	$sl_id=$_GET['sl_id'];
-	 
+require_once 'config/db_connect.php';
+require_once 'includes/security.php';
 
- $query="DELETE s,n FROM user_reg AS s INNER JOIN login AS n ON s.ul_id=n.l_id WHERE s.ul_id=$sl_id";
- //var_dump($query);
-	// $query="DELETE FROM login,registration using login INNER JOIN registration INNER JOIN astrologer WHERE login.lo_id=registration.lo_id AND registration.lo_id=astrologer.lo_id";
-	$result=$con->query($query);
-	if($result)
-	{
-		header('Location:viewuser.php');
+require_role('admin');
+
+if (isset($_GET['sl_id'])) {
+	$id = (int) $_GET['sl_id'];
+
+	$delete_user = "DELETE FROM user_reg WHERE ul_id = ?";
+	if (db_execute($con, $delete_user, "i", [$id])) {
+		$delete_login = "DELETE FROM login WHERE l_id = ?";
+		db_execute($con, $delete_login, "i", [$id]);
+		redirect_with_message('viewuser.php', 'User account deleted successfully.', 'success');
+	} else {
+		redirect_with_message('viewuser.php', 'Failed to delete user.', 'danger');
 	}
+} else {
+	redirect_with_message('viewuser.php', 'Invalid request.', 'danger');
 }
 ?>

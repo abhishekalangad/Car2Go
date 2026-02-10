@@ -74,99 +74,223 @@ $page_title = 'Secure Login - CAR2GO';
 include 'templates/header.php';
 ?>
 
-<div class="hero-section" style="min-height: 100vh; display: flex; align-items: center; padding: 100px 0;">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-5">
-        <div class="glass-card p-5">
-          <div class="text-center mb-5">
-            <div class="premium-icon mb-4">
-              <i class="fas fa-user-shield fa-3x text-primary"></i>
-            </div>
-            <h2 class="display-5 font-weight-bold text-white">Welcome <span>Back</span></h2>
-            <p class="text-white-50">Securely sign in to your CAR2GO account.</p>
+<style>
+  body {
+    background: #f8fafc;
+  }
+
+  .login-container {
+    min-height: 85vh;
+    display: flex;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 50px auto;
+    max-width: 1000px;
+    background: white;
+  }
+
+  .login-visual {
+    flex: 1;
+    background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)), url('images/bg8.jpg') center/cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem;
+    color: white;
+    position: relative;
+  }
+
+  .login-visual::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(2px);
+  }
+
+  .login-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .login-form-wrapper {
+    flex: 1;
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .form-control-lg {
+    border-radius: 10px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    font-size: 1rem;
+    padding: 1.5rem 1rem;
+  }
+
+  .form-control-lg:focus {
+    background: white;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  }
+
+  .social-btn {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: 600;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .social-btn:hover {
+    background: #f8fafc;
+    transform: translateY(-2px);
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #94a3b8;
+    margin: 1.5rem 0;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .divider span {
+    padding: 0 10px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .feature-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+  }
+
+  @media (max-width: 992px) {
+    .login-visual {
+      display: none;
+    }
+
+    .login-container {
+      margin: 20px;
+    }
+  }
+</style>
+
+<div class="container">
+  <div class="login-container">
+    <!-- Left: Visual Side -->
+    <div class="login-visual">
+      <div class="login-content">
+        <h2 class="font-weight-bold display-5 mb-4">Drive Your<br>Dreams Today.</h2>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-check"></i></div>
+          <div>
+            <h5 class="mb-0">Verified Partners</h5>
+            <p class="small text-white-50 mb-0">100% Trusted Network</p>
           </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+          <div>
+            <h5 class="mb-0">Secure Booking</h5>
+            <p class="small text-white-50 mb-0">Protected Payments</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-headset"></i></div>
+          <div>
+            <h5 class="mb-0">24/7 Support</h5>
+            <p class="small text-white-50 mb-0">Always here for you</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-          <?php if ($error_message): ?>
-            <div class="alert alert-danger mb-4"><?php echo e($error_message); ?></div>
-          <?php endif; ?>
+    <!-- Right: Login Form -->
+    <div class="login-form-wrapper">
+      <div class="mb-4">
+        <h2 class="font-weight-bold text-dark">Welcome Back</h2>
+        <p class="text-muted">Enter your credentials to access your account.</p>
+      </div>
 
-          <?php echo display_flash_message(); ?>
+      <?php if ($error_message): ?>
+        <div class="alert alert-danger mb-4 shadow-sm border-0 rounded-lg">
+          <i class="fas fa-exclamation-circle mr-2"></i> <?php echo e($error_message); ?>
+        </div>
+      <?php endif; ?>
 
-          <form action="login.php" method="POST" class="premium-form">
-            <input type="hidden" name="csrf_token" value="<?php echo generate_csrf_token(); ?>">
+      <?php echo display_flash_message(); ?>
 
-            <div class="form-group mb-4">
-              <label class="text-white-50 small mb-2 uppercase">Email Address</label>
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text bg-transparent border-secondary text-white-50"><i
-                      class="fas fa-envelope"></i></span>
-                </div>
-                <input type="email" name="l_uname" class="form-control bg-transparent text-white border-secondary"
-                  placeholder="name@example.com" required
-                  value="<?php echo isset($_POST['l_uname']) ? e($_POST['l_uname']) : ''; ?>">
-              </div>
-            </div>
+      <form action="login.php" method="POST">
+        <input type="hidden" name="csrf_token" value="<?php echo generate_csrf_token(); ?>">
 
-            <div class="form-group mb-5">
-              <label class="text-white-50 small mb-2 uppercase">Password</label>
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text bg-transparent border-secondary text-white-50"><i
-                      class="fas fa-lock"></i></span>
-                </div>
-                <input type="password" name="l_password" class="form-control bg-transparent text-white border-secondary"
-                  placeholder="••••••••" required>
-              </div>
-            </div>
-
-            <button type="submit" name="login" class="btn btn-premium btn-gradient w-100 py-3 mb-4 font-weight-bold">
-              SIGN IN
-            </button>
-
-            <div class="text-center">
-              <p class="text-white-50 small mb-4">New to CAR2GO? Register as:</p>
-              <div class="d-flex justify-content-center gap-2">
-                <a href="userreg.php" class="btn btn-sm btn-outline-light px-3">User</a>
-                <a href="driverreg.php" class="btn btn-sm btn-outline-light px-3">Driver</a>
-                <a href="servicereg.php" class="btn btn-sm btn-outline-light px-3">Partner</a>
-              </div>
-            </div>
-          </form>
+        <div class="form-group mb-4">
+          <label class="small font-weight-bold text-muted ml-1">Email Address</label>
+          <input type="email" name="l_uname" class="form-control form-control-lg" placeholder="name@company.com"
+            required>
         </div>
 
-        <div class="text-center mt-4">
-          <p class="text-white-50 small"><i class="fas fa-lock mr-2"></i> Secured by 256-bit AES Encryption</p>
+        <div class="form-group mb-4">
+          <div class="d-flex justify-content-between">
+            <label class="small font-weight-bold text-muted ml-1">Password</label>
+            <a href="#" class="small text-primary font-weight-bold">Forgot?</a>
+          </div>
+          <input type="password" name="l_password" class="form-control form-control-lg" placeholder="••••••••" required>
         </div>
+
+        <button type="submit" name="login" class="btn btn-primary btn-block btn-lg font-weight-bold shadow-sm"
+          style="background: linear-gradient(135deg, #3b82f6, #2563eb); border:none; border-radius: 12px; padding: 12px;">
+          SIGN IN
+        </button>
+      </form>
+
+      <div class="divider"><span>Or continue with</span></div>
+
+      <div class="row">
+        <div class="col-6 pr-2">
+          <a href="#" class="social-btn"><i class="fab fa-google text-danger mr-2"></i> Google</a>
+        </div>
+        <div class="col-6 pl-2">
+          <a href="#" class="social-btn"><i class="fab fa-facebook-f text-primary mr-2"></i> Facebook</a>
+        </div>
+      </div>
+
+      <div class="text-center mt-5">
+        <p class="text-muted mb-0">Don't have an account? <a href="userreg.php"
+            class="font-weight-bold text-primary">Register Free</a></p>
       </div>
     </div>
   </div>
 </div>
-
-<style>
-  .uppercase {
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-
-  .input-group-text {
-    border-right: none;
-  }
-
-  .form-control {
-    border-left: none;
-  }
-
-  .form-control:focus {
-    background: rgba(255, 255, 255, 0.05) !important;
-    color: white !important;
-  }
-
-  .btn-outline-light:hover {
-    background: var(--primary-color);
-    border-color: var(--primary-color);
-  }
-</style>
 
 <?php include 'templates/footer.php'; ?>

@@ -1,18 +1,22 @@
 <?php
 session_start();
-include("db_connect.php");
-if(isset($_GET['sl_id']))
-{
-	$sl_id=$_GET['sl_id'];
-	 
+require_once 'config/db_connect.php';
+require_once 'includes/security.php';
 
- $query="DELETE s,n FROM driver_reg AS s INNER JOIN login AS n ON s.dl_id=n.l_id WHERE s.dl_id=$sl_id";
- //var_dump($query);
-	// $query="DELETE FROM login,registration using login INNER JOIN registration INNER JOIN astrologer WHERE login.lo_id=registration.lo_id AND registration.lo_id=astrologer.lo_id";
-	$result=$con->query($query);
-	if($result)
-	{
-		header('Location:viewdriver.php');
+require_role('admin');
+
+if (isset($_GET['sl_id'])) {
+	$id = (int) $_GET['sl_id'];
+
+	$delete_driver = "DELETE FROM driver_reg WHERE dl_id = ?";
+	if (db_execute($con, $delete_driver, "i", [$id])) {
+		$delete_login = "DELETE FROM login WHERE l_id = ?";
+		db_execute($con, $delete_login, "i", [$id]);
+		redirect_with_message('viewdriver.php', 'Driver deleted successfully.', 'success');
+	} else {
+		redirect_with_message('viewdriver.php', 'Failed to delete driver.', 'danger');
 	}
+} else {
+	redirect_with_message('viewdriver.php', 'Invalid request.', 'danger');
 }
 ?>

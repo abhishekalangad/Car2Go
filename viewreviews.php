@@ -16,7 +16,7 @@ $query = "SELECT r.*, u.u_name
           FROM rating r 
           JOIN user_reg u ON r.ur_id = u.ul_id 
           WHERE r.l_id = ? 
-          ORDER BY r.id DESC";
+          ORDER BY r.re_id DESC";
 $reviews = db_fetch_all($con, $query, "i", [$rl_id]);
 
 // Get Target Name (User/Driver/Service)
@@ -95,12 +95,24 @@ include 'templates/header.php';
   }
 </style>
 
-<div class="review-header">
-  <div class="container">
-    <h1 class="font-weight-bold display-4 mb-3">Customer <span class="text-primary">Reviews</span></h1>
-    <p class="lead opacity-7">Honest feedback from our community for <?php echo e($target_name); ?>.</p>
+<div class="page-hero">
+  <div class="container hero-content text-center">
+    <h1 class="font-weight-bold mb-2 animate__animated animate__fadeInDown">Customer <span
+        class="text-primary">Reviews</span></h1>
+    <p class="lead text-white-50 animate__animated animate__fadeInUp">Honest feedback from our community for
+      <?php echo e($target_name); ?>.</p>
   </div>
 </div>
+
+<style>
+  .page-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    padding: 5rem 0 8rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+</style>
 
 <div class="container py-5">
   <div class="row justify-content-center">

@@ -12,11 +12,19 @@ $l_id = $_SESSION['l_id'];
 if (isset($_GET['action']) && isset($_GET['id'])) {
     $id = (int) $_GET['id'];
     $action = $_GET['action'];
-    $new_status = ($action === 'confirm') ? 'confirmed' : 'cancelled';
+    $new_status = ($action === 'confirm' || $action === 'accept') ? 'confirmed' : 'cancelled';
 
-    $q = "UPDATE bookdriver SET d_status = ? WHERE d_id = ? AND dd_id = ?";
-    if (db_execute($con, $q, "sii", [$new_status, $id, $l_id])) {
-        redirect_with_message('assignments.php', 'Assignment updated successfully.', 'success');
+    // Verify this assignment belongs to the logged-in driver to prevent IDOR
+    $check_q = "SELECT d_id FROM bookdriver WHERE d_id = ? AND dd_id = ?";
+    if (db_fetch_one($con, $check_q, "ii", [$id, $l_id])) {
+        $q = "UPDATE bookdriver SET d_status = ? WHERE d_id = ?";
+        if (db_execute($con, $q, "si", [$new_status, $id])) {
+            $msg_type = ($new_status === 'confirmed') ? 'success' : 'warning';
+            $msg_text = ($new_status === 'confirmed') ? 'Job confirmed! Contact the customer.' : 'Job declined.';
+            redirect_with_message('assignments.php', $msg_text, $msg_type);
+        }
+    } else {
+        redirect_with_message('assignments.php', 'Invalid assignment ID.', 'danger');
     }
 }
 
@@ -33,74 +41,90 @@ $base_url = '../';
 include '../templates/header.php';
 ?>
 
-<div class="container py-5">
-    <div class="mb-5">
-        <h1 class="font-weight-bold">My <span class="text-primary">Assignments</span></h1>
-        <p class="text-muted">Manage your riding requests and confirmed trips.</p>
+<div class="page-hero py-5"
+    style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: white; margin-top:-20px; border-radius: 0 0 40px 40px;">
+    <div class="container text-center">
+        <h1 class="display-4 font-weight-bold mb-2">My Assignments</h1>
+        <p class="opacity-7">Manage your ride requests and upcoming trips.</p>
     </div>
+</div>
 
+<div class="container py-5 mt-n5">
     <div class="row">
         <?php foreach ($assignments as $gig): ?>
-            <div class="col-md-6 mb-4">
-                <div class="card border-0 shadow-sm rounded-xl overflow-hidden h-100">
-                    <div class="card-body p-4">
+            <?php
+            $status_class = match ($gig['d_status']) {
+                'confirmed', 'Completed' => 'success',
+                'Requested' => 'warning',
+                'cancelled' => 'danger',
+                default => 'secondary'
+            };
+            ?>
+            <div class="col-md-6 col-lg-6 mb-4">
+                <div class="card border-0 shadow-lg rounded-xl overflow-hidden h-100 assignment-card">
+                    <div class="card-body p-4 d-flex flex-column">
                         <div class="d-flex justify-content-between align-items-start mb-4">
-                            <div>
-                                <h5 class="font-weight-bold mb-1">
-                                    <?php echo e($gig['customer_name']); ?>
-                                </h5>
-                                <span class="badge badge-<?php
-                                echo ($gig['d_status'] === 'confirmed') ? 'success' : (($gig['d_status'] === 'Requested') ? 'warning' : 'secondary');
-                                ?> pill px-3">
-                                    <?php echo e($gig['d_status']); ?>
-                                </span>
-                            </div>
-                            <div class="text-right">
-                                <div class="small text-muted mb-1">TRIP DATES</div>
-                                <div class="font-weight-bold small text-dark">
-                                    <?php echo $gig['d_day1']; ?> to
-                                    <?php echo $gig['d_day2']; ?>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-light rounded-circle p-3 mr-3 shadow-sm text-primary">
+                                    <i class="fas fa-user fa-lg"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-weight-bold mb-0 text-dark">
+                                        <?php echo e($gig['customer_name']); ?>
+                                    </h5>
+                                    <div class="small text-muted">Customer</div>
                                 </div>
                             </div>
+                            <span class="badge badge-<?php echo $status_class; ?> pill px-3 py-1">
+                                <?php echo ucfirst($gig['d_status']); ?>
+                            </span>
                         </div>
 
-                        <div class="bg-light rounded-lg p-3 mb-4">
-                            <div class="row">
-                                <div class="col-6 mb-2">
-                                    <label class="extra-small font-weight-bold text-muted uppercase mb-0">Pickup
-                                        Location</label>
-                                    <div class="small">
-                                        <?php echo e($gig['u_address']); ?>
-                                    </div>
+                        <div class="bg-light rounded-lg p-3 mb-4 border border-light">
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <label class="extra-small font-weight-bold text-muted uppercase mb-0">From</label>
+                                    <div class="small font-weight-bold">
+                                        <?php echo date('M d', strtotime($gig['d_day1'])); ?></div>
                                 </div>
-                                <div class="col-6 mb-2 text-right">
-                                    <label class="extra-small font-weight-bold text-muted uppercase mb-0">Zip Code</label>
-                                    <div class="small">
-                                        <?php echo e($gig['u_pincode']); ?>
-                                    </div>
+                                <div class="col-6 text-right">
+                                    <label class="extra-small font-weight-bold text-muted uppercase mb-0">To</label>
+                                    <div class="small font-weight-bold">
+                                        <?php echo date('M d', strtotime($gig['d_day2'])); ?></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="border-top my-2"></div>
                                 </div>
                                 <div class="col-12">
-                                    <label class="extra-small font-weight-bold text-muted uppercase mb-0">Contact</label>
-                                    <div class="small font-weight-bold text-primary"><i class="fas fa-phone-alt mr-1"></i>
-                                        <?php echo e($gig['u_phone']); ?>
-                                    </div>
+                                    <label class="extra-small font-weight-bold text-muted uppercase mb-1">Pickup
+                                        Location</label>
+                                    <div class="small text-dark"><i class="fas fa-map-marker-alt text-danger mr-1"></i>
+                                        <?php echo e($gig['u_address']); ?></div>
+                                    <div class="small text-muted pl-4">Pincode: <?php echo e($gig['u_pincode']); ?></div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-between align-items-center">
+                        <div class="mt-auto">
                             <?php if ($gig['d_status'] === 'Requested'): ?>
                                 <div class="d-flex gap-2 w-100">
-                                    <a href="assignments.php?action=confirm&id=<?php echo $gig['d_id']; ?>"
-                                        class="btn btn-success btn-sm rounded-pill px-4 flex-grow-1 mr-2">Confirm Trip</a>
+                                    <a href="assignments.php?action=accept&id=<?php echo $gig['d_id']; ?>"
+                                        class="btn btn-primary btn-sm rounded-pill px-4 flex-grow-1 mr-2 font-weight-bold shadow-sm">Accept
+                                        Job</a>
                                     <a href="assignments.php?action=cancel&id=<?php echo $gig['d_id']; ?>"
-                                        class="btn btn-outline-danger btn-sm rounded-pill px-4 flex-grow-1"
+                                        class="btn btn-outline-danger btn-sm rounded-pill px-4 flex-grow-1 font-weight-bold"
                                         onclick="return confirm('Decline this assignment?')">Decline</a>
                                 </div>
+                            <?php elseif ($gig['d_status'] === 'confirmed'): ?>
+                                <a href="tel:<?php echo e($gig['u_phone']); ?>"
+                                    class="btn btn-outline-primary btn-block rounded-pill font-weight-bold">
+                                    <i class="fas fa-phone-alt mr-2"></i> Call Customer
+                                </a>
                             <?php else: ?>
-                                <div class="text-muted small italic">Updated on
-                                    <?php echo date('d M Y'); ?>
-                                </div>
+                                <button disabled class="btn btn-light btn-block rounded-pill text-muted small">Action
+                                    Unavailable</button>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -110,7 +134,7 @@ include '../templates/header.php';
 
         <?php if (empty($assignments)): ?>
             <div class="col-12 text-center py-5">
-                <div class="mb-4"><i class="fas fa-calendar-minus fa-4x text-muted opacity-2"></i></div>
+                <img src="../images/empty-state.svg" width="120" class="mb-3 opacity-5">
                 <h4 class="text-muted">No assignments found.</h4>
                 <p>Wait for customers to book your services.</p>
             </div>
@@ -119,8 +143,17 @@ include '../templates/header.php';
 </div>
 
 <style>
+    .assignment-card {
+        transition: transform 0.2s;
+    }
+
+    .assignment-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08) !important;
+    }
+
     .rounded-xl {
-        border-radius: 1.5rem;
+        border-radius: 1.25rem;
     }
 
     .extra-small {
@@ -135,10 +168,6 @@ include '../templates/header.php';
     .pill {
         border-radius: 30px;
     }
-
-    .gap-2 {
-        gap: 0.5rem;
-    }
 </style>
 
-<?php include '../templates/footer.php'; ?>
+<?php include '../templates/header.php'; ?>

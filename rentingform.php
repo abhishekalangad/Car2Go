@@ -106,151 +106,178 @@ $page_title = 'List Your Car - CAR2GO';
 include 'templates/header.php';
 ?>
 
-<div class="hero-section" style="height: auto; padding: 100px 0;">
-    <div class="container d-flex justify-content-center">
-        <div class="glass-card" style="width: 100%; max-width: 900px; padding: 40px;">
-            <div class="text-center mb-5">
-                <h2 class="display-4 font-weight-bold" style="color: white; letter-spacing: -2px;">Rent Your
-                    <span>Vehicle</span></h2>
-                <p class="text-white-50">Provide car details and documents for verification.</p>
-            </div>
-
-            <?php if ($error_message): ?>
-                <div class="alert alert-danger mb-4"><?php echo e($error_message); ?></div>
-            <?php endif; ?>
-
-            <?php if ($success_message): ?>
-                <div class="alert alert-success mb-4"><?php echo e($success_message); ?></div>
-            <?php endif; ?>
-
-            <form action="#" method="post" enctype="multipart/form-data" class="premium-form">
-                <input type="hidden" name="csrf_token" value="<?php echo generate_csrf_token(); ?>">
-
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="text-white small mb-1">Company Name</label>
-                        <input type="text" class="form-control bg-transparent text-white border-secondary"
-                            name="company" placeholder="e.g. Toyota" required>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="text-white small mb-1">Model Name</label>
-                        <input type="text" class="form-control bg-transparent text-white border-secondary" name="mname"
-                            placeholder="e.g. Camry" required>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="text-white small mb-1">Model Year</label>
-                        <input type="text" class="form-control bg-transparent text-white border-secondary" name="year"
-                            placeholder="e.g. 2022" required>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="text-white small mb-1">Reg. Number</label>
-                        <input type="text" class="form-control bg-transparent text-white border-secondary" name="number"
-                            placeholder="XX-00-XX-0000" required>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="text-white small mb-1">Rent/KM (₹)</label>
-                        <input type="number" class="form-control bg-transparent text-white border-secondary" name="ppkm"
-                            required>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="text-white small mb-1">Daily Rent (₹)</label>
-                        <input type="number" class="form-control bg-transparent text-white border-secondary" name="rent"
-                            required>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="text-white small mb-1">Seating Capacity</label>
-                        <input type="number" class="form-control bg-transparent text-white border-secondary"
-                            name="rseat" required>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="text-white small mb-1">Location Pincode</label>
-                        <input type="text" class="form-control bg-transparent text-white border-secondary"
-                            name="pincode" maxlength="6" required>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="text-white small mb-1">Contact Phone</label>
-                        <input type="text" class="form-control bg-transparent text-white border-secondary" name="phone"
-                            required pattern="[0-9]{10}">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-12 mb-3">
-                        <label class="text-white small mb-1">Additional Information</label>
-                        <textarea name="addinfo" class="form-control bg-transparent text-white border-secondary"
-                            rows="2"></textarea>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="text-white small mb-1">Mechanical Status</label>
-                        <textarea name="custatus" class="form-control bg-transparent text-white border-secondary"
-                            rows="2" placeholder="Engine, AC, Tyres condition..."></textarea>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="text-white small mb-1">Accident History</label>
-                        <textarea name="acchistory" class="form-control bg-transparent text-white border-secondary"
-                            rows="2" placeholder="Describe any past accidents..."></textarea>
-                    </div>
-                </div>
-
-                <div class="row mt-4">
-                    <div class="col-md-6 col-lg-3 mb-4">
-                        <div class="p-3 border border-secondary rounded text-center h-100"
-                            style="background: rgba(0,0,0,0.2);">
-                            <label class="text-white small font-weight-bold d-block mb-3">Car Photo</label>
-                            <i class="fas fa-camera fa-2x text-primary mb-3"></i>
-                            <input type="file" name="car" class="small text-white-50 w-100" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-3 mb-4">
-                        <div class="p-3 border border-secondary rounded text-center h-100"
-                            style="background: rgba(0,0,0,0.2);">
-                            <label class="text-white small font-weight-bold d-block mb-3">RC Book</label>
-                            <i class="fas fa-file-contract fa-2x text-primary mb-3"></i>
-                            <input type="file" name="tax" class="small text-white-50 w-100" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-3 mb-4">
-                        <div class="p-3 border border-secondary rounded text-center h-100"
-                            style="background: rgba(0,0,0,0.2);">
-                            <label class="text-white small font-weight-bold d-block mb-3">Insurance</label>
-                            <i class="fas fa-shield-alt fa-2x text-primary mb-3"></i>
-                            <input type="file" name="insurance" class="small text-white-50 w-100" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-3 mb-4">
-                        <div class="p-3 border border-secondary rounded text-center h-100"
-                            style="background: rgba(0,0,0,0.2);">
-                            <label class="text-white small font-weight-bold d-block mb-3">Pollution Cert</label>
-                            <i class="fas fa-smog fa-2x text-primary mb-3"></i>
-                            <input type="file" name="polution" class="small text-white-50 w-100" required>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="text-center mt-4">
-                    <button type="submit" name="submit" class="btn btn-premium btn-gradient px-5 py-3">Submit Vehicle
-                        Listing</button>
-                </div>
-            </form>
-        </div>
+<div class="page-hero">
+    <div class="container hero-content text-center">
+        <h1 class="display-4 font-weight-bold mb-2 animate__animated animate__fadeInDown">Rent Your Vehicle</h1>
+        <p class="lead text-white-50 animate__animated animate__fadeInUp">Reach thousands of customers by listing your
+            car today</p>
     </div>
 </div>
 
+<div class="container animate__animated animate__fadeInUp animate__delay-1s"
+    style="margin-top: -80px; position: relative; z-index: 10;">
+    <div class="glass-card"
+        style="width: 100%; padding: 40px; background: white; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
+
+        <?php if ($error_message): ?>
+            <div class="alert alert-danger mb-4"><?php echo e($error_message); ?></div>
+        <?php endif; ?>
+
+        <?php if ($success_message): ?>
+            <div class="alert alert-success mb-4"><?php echo e($success_message); ?></div>
+        <?php endif; ?>
+
+        <form action="#" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="<?php echo generate_csrf_token(); ?>">
+
+            <h5 class="font-weight-bold text-dark mb-4 border-bottom pb-2">Vehicle Information</h5>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label>Company Name</label>
+                    <input type="text" class="form-control" name="company" placeholder="e.g. Toyota" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label>Model Name</label>
+                    <input type="text" class="form-control" name="mname" placeholder="e.g. Camry" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label>Model Year</label>
+                    <input type="text" class="form-control" name="year" placeholder="e.g. 2022" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label>Reg. Number</label>
+                    <input type="text" class="form-control" name="number" placeholder="XX-00-XX-0000" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label>Rent/KM (₹)</label>
+                    <input type="number" class="form-control" name="ppkm" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label>Daily Rent (₹)</label>
+                    <input type="number" class="form-control" name="rent" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label>Seating Capacity</label>
+                    <input type="number" class="form-control" name="rseat" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label>Location Pincode</label>
+                    <input type="text" class="form-control" name="pincode" maxlength="6" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label>Contact Phone</label>
+                    <input type="text" class="form-control" name="phone" required pattern="[0-9]{10}">
+                </div>
+            </div>
+
+            <h5 class="font-weight-bold text-dark mb-4 mt-4 border-bottom pb-2">Additional Details</h5>
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label>Additional Information</label>
+                    <textarea name="addinfo" class="form-control" rows="2"></textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label>Mechanical Status</label>
+                    <textarea name="custatus" class="form-control" rows="2" placeholder="Engine, AC, Tyres condition..."></textarea>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label>Accident History</label>
+                    <textarea name="acchistory" class="form-control" rows="2" placeholder="Describe any past accidents..."></textarea>
+                </div>
+            </div>
+
+            <h5 class="font-weight-bold text-dark mb-4 mt-4 border-bottom pb-2">Documents</h5>
+            <div class="row mt-4">
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="p-4 border rounded text-center h-100 bg-light">
+                        <label class="font-weight-bold d-block mb-3 text-dark">Car Photo</label>
+                        <i class="fas fa-camera fa-2x text-muted mb-3"></i>
+                        <div class="custom-file overflow-hidden">
+                            <input type="file" name="car" class="small w-100" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="p-4 border rounded text-center h-100 bg-light">
+                        <label class="font-weight-bold d-block mb-3 text-dark">RC Book</label>
+                        <i class="fas fa-file-contract fa-2x text-muted mb-3"></i>
+                        <input type="file" name="tax" class="small w-100" required>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="p-4 border rounded text-center h-100 bg-light">
+                        <label class="font-weight-bold d-block mb-3 text-dark">Insurance</label>
+                        <i class="fas fa-shield-alt fa-2x text-muted mb-3"></i>
+                        <input type="file" name="insurance" class="small w-100" required>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="p-4 border rounded text-center h-100 bg-light">
+                        <label class="font-weight-bold d-block mb-3 text-dark">Pollution Cert</label>
+                        <i class="fas fa-smog fa-2x text-muted mb-3"></i>
+                        <input type="file" name="polution" class="small w-100" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" name="submit" class="btn btn-premium btn-gradient px-5 py-3">Submit Vehicle Listing</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+
 <style>
-    .premium-form .form-control:focus {
-        background: rgba(255, 255, 255, 0.05) !important;
-        border-color: var(--primary-color) !important;
-        box-shadow: 0 0 10px rgba(37, 99, 235, 0.2);
-        color: white !important;
+    .page-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        padding: 5rem 0 10rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .form-control {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        height: 50px;
+        color: #1e293b;
+    }
+    
+    .form-control:focus {
+        background-color: #fff;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    label {
+        font-weight: 600;
+        color: #475569;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .btn-gradient {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        border: none;
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+        transition: transform 0.2s;
+    }
+    
+    .btn-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
+        color: white;
     }
 </style>
 

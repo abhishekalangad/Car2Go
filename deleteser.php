@@ -1,18 +1,24 @@
 <?php
 session_start();
-include("db_connect.php");
-if(isset($_GET['sl_id']))
-{
-	$sl_id=$_GET['sl_id'];
-	 
+require_once 'config/db_connect.php';
+require_once 'includes/security.php';
 
- $query="DELETE s,n FROM service_reg AS s INNER JOIN login AS n ON s.sl_id=n.l_id WHERE s.sl_id=$sl_id";
- //var_dump($query);
-	// $query="DELETE FROM login,registration using login INNER JOIN registration INNER JOIN astrologer WHERE login.lo_id=registration.lo_id AND registration.lo_id=astrologer.lo_id";
-	$result=$con->query($query);
-	if($result)
-	{
-		header('Location:viewservice.php');
+require_role('admin');
+
+if (isset($_GET['sl_id'])) {
+	$id = (int) $_GET['sl_id'];
+
+	// Delete related records first if cascading isn't set up
+	// Assuming simple deletion for now as in legacy
+	$delete_service = "DELETE FROM service_reg WHERE sl_id = ?";
+	if (db_execute($con, $delete_service, "i", [$id])) {
+		$delete_login = "DELETE FROM login WHERE l_id = ?";
+		db_execute($con, $delete_login, "i", [$id]);
+		redirect_with_message('viewservice.php', 'Service center deleted successfully.', 'success');
+	} else {
+		redirect_with_message('viewservice.php', 'Failed to delete service center.', 'danger');
 	}
+} else {
+	redirect_with_message('viewservice.php', 'Invalid request.', 'danger');
 }
 ?>

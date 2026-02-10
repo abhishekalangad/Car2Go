@@ -1,151 +1,136 @@
 <?php
-// session_start();
-include 'db_connect.php';
-include 'aheader.php';
-// if(isset($_SESSION['l_id']))
-// {
-//   $l_id =$_SESSION['l_id'];
-//   //var_dump($l_id);
+session_start();
+require_once 'config/db_connect.php';
+require_once 'includes/security.php';
 
+// Fetch All Car Bookings
+$query = "SELECT b.*, r.r_company, r.r_mname, u.u_name as renter_name, r.rent_amt
+          FROM bookcar b 
+          JOIN rent r ON b.br_id = r.r_id 
+          JOIN user_reg u ON b.bo_id = u.ul_id 
+          ORDER BY b.b_id DESC";
 
-// }
+$bookings = db_fetch_all($con, $query);
+
+include 'templates/header.php';
 ?>
 
-<!-- our blog -->
-<section class="blog" id="blog">
-   <div class="container">
-      <div class="heading">
-         <h3> Car booking history </h3>
-      </div>
-      <div class="blog-grids" style="height: 500px;">
- <?php
-
- $s="SELECT * FROM bookcar  ";
-//var_dump($s);i
-      if(!$stmt=mysqli_query($con,$s))
-      {
-        die("Preparestatment error");
-      }
-      $d=array();
-      while ($row=mysqli_fetch_array($stmt))
-       {
-        $d[]=$row;
-   $d_id=$row['b_id'];
-  $bo_id=$row['bo_id'];
-  $br_id=$row['br_id'];
-  $b_day1=$row['b_day1'];
-  $b_day2=$row['b_day2'];
-  $b_status=$row['b_status'];
-
-
- //   $licence=$row['s_licence'];
- //  $name=$row['s_name'];
- // $email=$row['s_email'];
- //  $password=$row['s_password'];
- //  $address=$row['s_address'];
- //   // $city=$row['d_city'];
- //   // $state=$row['d_state'];
- //   $phone=$row['s_phone'];
- //   $pincode=$row['s_pincode'];
- //   $rc=$row['s_rc'];
- 
- //  $approve=$row['l_approve'];
-
-
-     $s1="SELECT * FROM user_reg  WHERE ul_id ='$br_id' ";  
-//var_dump($s);i
-      if(!$stmt1=mysqli_query($con,$s1))
-      {
-        die("Preparestatment error");
-      }
-      $d=array();
-      while ($row1=mysqli_fetch_array($stmt1))
-       {
-        
-     $rname=$row1['u_name'];
-
-}
-
- $s2="SELECT * FROM  user_reg WHERE ul_id ='$bo_id'  "; 
-//var_dump($s);i
-      if(!$stmt2=mysqli_query($con,$s2))
-      {
-        die("Preparestatment error");
-      }
-      $d=array();
-      while ($row2=mysqli_fetch_array($stmt2))
-       {
-      
-   $oname=$row2['u_name'];
-}
-
-
-
-                                ?>
-
-      <div class="col-md-4 blog-grid" style="margin-top:30px;">
-         <!-- <a href="images/<?php echo $licence;?>" ><img src="images/<?php echo $licence;?>" alt="" /></a> -->
-         <h5></h5>
-         <!-- <h4><a href="images/<?php echo $licence;?>">Rc</a></h4> -->
-         <p> Requesting user :<?php echo $rname;?></p>
-         <!-- <p> Requesting car :<?php echo $name;?></p> -->
-         <p> Owner :<?php echo $oname;?></p>
-         <p> Starting date :<?php echo $b_day1;?></p>
-         <p> Ending date :<?php echo $b_day2;?></p>
-         <p> Status :<?php echo $b_status;?></p>
-
-         <!-- <p>Email : <?php echo $email;?></p>
-         <p>Address : <?php echo $address;?></p>
-         <p>Phone : <?php echo $phone;?></p>
-         <p>Pincode : <?php echo $pincode;?></p>
-          <p>Status :<?php echo $approve;?></p> -->
-                                
-                                    
-         <div class="readmore-w3">
-            <!-- <a class="readmore" href="#" data-toggle="modal" data-target="#myModal">Read More</a> -->
-               <!--  <?php
-                                    if($approve=='approve')
-                                    {
-                                    ?>
-                                   <a href="disser.php?sl_id=<?php echo $sl_id;?>"><button class="btn btn-danger">Disapprove</button></a>
-                                    <?php
-                                  }
-                                  else
-                                  {
-                                    ?>
-                                   <a href="appser.php?sl_id=<?php echo $sl_id;?>"><button class="btn btn-success">Approve</button></a>
-                                    <?php
-                                  }
-                                  ?> -->
-                                    
-                                 <!--    <a href="deleteser.php?sl_id=<?php echo $sl_id;?>"><button  class="btn btn-primary">Delete</button></a> -->
-         </div>
-      </div>
- <?php
-}
-?>
-      <div class="clearfix"></div>
-      </div>
+<div class="page-hero">
+   <div class="container hero-content text-center">
+      <h1 class="font-weight-bold mb-2 text-white">Car Booking History</h1>
+      <p class="lead text-white-50">Manage all vehicle rental reservations.</p>
    </div>
-</section>
-<!-- //our blog -->
-<?php
+</div>
 
-include 'footer.php';
-?>
+<div class="container-fluid py-5" style="background: #f8fafc; min-height: 80vh;">
+   <div class="container animate__animated animate__fadeInUp bg-white rounded-lg shadow-sm p-0 overflow-hidden"
+      style="margin-top: -80px; position: relative; z-index: 10;">
 
+      <?php if (empty($bookings)): ?>
+         <div class="text-center p-5">
+            <h3 class="text-muted font-weight-bold">No Bookings Found</h3>
+         </div>
+      <?php else: ?>
+         <div class="table-responsive">
+            <table class="table table-hover mb-0">
+               <thead class="bg-light text-uppercase small text-muted font-weight-bold">
+                  <tr>
+                     <th class="py-4 px-4 border-0">ID</th>
+                     <th class="py-4 px-4 border-0">Requested By</th>
+                     <th class="py-4 px-4 border-0">Vehicle</th>
+                     <th class="py-4 px-4 border-0">Dates</th>
+                     <th class="py-4 px-4 border-0">Total Amount</th>
+                     <th class="py-4 px-4 border-0">Status</th>
+                     <th class="py-4 px-4 border-0">Payment</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <?php foreach ($bookings as $row):
+                     $start = new DateTime($row['b_day1']);
+                     $end = new DateTime($row['b_day2']);
+                     $days = max(1, $start->diff($end)->days);
+                     $total = $days * $row['rent_amt'];
+                     ?>
+                     <tr>
+                        <td class="px-4 py-4 align-middle font-weight-bold text-dark">#<?php echo $row['b_id']; ?></td>
+                        <td class="px-4 py-4 align-middle">
+                           <div class="font-weight-bold text-dark"><?php echo htmlspecialchars($row['renter_name']); ?></div>
+                        </td>
+                        <td class="px-4 py-4 align-middle">
+                           <div class="font-weight-bold text-primary">
+                              <?php echo htmlspecialchars($row['r_company'] . ' ' . $row['r_mname']); ?>
+                           </div>
+                        </td>
+                        <td class="px-4 py-4 align-middle text-muted small">
+                           <?php echo date('M d', strtotime($row['b_day1'])); ?> -
+                           <?php echo date('M d', strtotime($row['b_day2'])); ?>
+                           <div class="font-weight-bold text-dark"><?php echo $days; ?> Days</div>
+                        </td>
+                        <td class="px-4 py-4 align-middle font-weight-bold text-dark">
+                           ₹<?php echo number_format($total); ?>
+                        </td>
+                        <td class="px-4 py-4 align-middle">
+                           <?php
+                           $status = ucfirst($row['b_status']);
+                           $badge = 'badge-secondary';
+                           if (stripos($status, 'Confirm') !== false)
+                              $badge = 'badge-success';
+                           if (stripos($status, 'Pending') !== false)
+                              $badge = 'badge-warning';
+                           if (stripos($status, 'Reject') !== false || stripos($status, 'Not') !== false)
+                              $badge = 'badge-danger';
+                           ?>
+                           <span class="badge <?php echo $badge; ?> px-3 py-2 rounded-pill"><?php echo $status; ?></span>
+                        </td>
+                        <td class="px-4 py-4 align-middle">
+                           <?php if (!empty($row['payment'])): ?>
+                              <span class="text-success small font-weight-bold"><i class="fas fa-check-circle mr-1"></i>
+                                 Paid</span>
+                           <?php else: ?>
+                              <span class="text-muted small">Pending</span>
+                           <?php endif; ?>
+                        </td>
+                     </tr>
+                  <?php endforeach; ?>
+               </tbody>
+            </table>
+         </div>
+      <?php endif; ?>
+   </div>
+</div>
 
+<style>
+   .page-hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      padding: 5rem 0 8rem;
+      color: white;
+      position: relative;
+      overflow: hidden;
+   }
 
- <!-- //   $licence=$row['s_licence'];
- //  $name=$row['s_name'];
- // $email=$row['s_email'];
- //  $password=$row['s_password'];
- //  $address=$row['s_address'];
- //   // $city=$row['d_city'];
- //   // $state=$row['d_state'];
- //   $phone=$row['s_phone'];
- //   $pincode=$row['s_pincode'];
- //   $rc=$row['s_rc'];
- 
- //  $approve=$row['l_approve'];
- -->
+   .rounded-lg {
+      border-radius: 15px;
+   }
+
+   .badge-success {
+      background-color: #dcfce7;
+      color: #166534;
+   }
+
+   .badge-warning {
+      background-color: #fef9c3;
+      color: #854d0e;
+   }
+
+   .badge-danger {
+      background-color: #fee2e2;
+      color: #991b1b;
+   }
+
+   .badge-secondary {
+      background-color: #f1f5f9;
+      color: #475569;
+   }
+</style>
+
+<?php include 'templates/footer.php'; ?>

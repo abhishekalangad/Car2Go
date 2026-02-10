@@ -1,108 +1,210 @@
 </main>
 <!-- End Main Content -->
 
-<!-- Footer -->
-<footer style="background: var(--bg-dark); color: white; margin-top: 5rem; padding: 4rem 0 2rem;">
+<!-- Premium Footer -->
+<footer id="premium-footer">
     <div class="container">
         <div class="row">
-            <div class="col-md-4 mb-4">
-                <h5 class="mb-4" style="font-weight: 700; color: var(--primary-color);">
-                    <i class="fas fa-car"></i> CAR2GO
-                </h5>
-                <p class="text-muted">
-                    Defining the future of mobility. Your trusted partner for premium car rentals, professional drivers,
-                    and expert vehicle solutions.
+            <!-- Brand & Story -->
+            <div class="col-md-4 col-sm-12 mb-4">
+                <a href="<?php echo $base_url ?? '/'; ?>" class="footer-brand">
+                    <i class="fa fa-car mr-2"></i> CAR2GO
+                </a>
+                <p class="footer-desc">
+                    Defining the future of mobility. Whether you need a premium rental, a professional chauffeur, or
+                    expert service, we are your trusted partner on every journey.
                 </p>
-                <div class="mt-4">
-                    <a href="#" class="btn btn-sm btn-outline-light mr-2 rounded-circle"><i
-                            class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="btn btn-sm btn-outline-light mr-2 rounded-circle"><i
-                            class="fab fa-twitter"></i></a>
-                    <a href="#" class="btn btn-sm btn-outline-light mr-2 rounded-circle"><i
-                            class="fab fa-instagram"></i></a>
+                <div class="social-icons">
+                    <a href="#"><i class="fa fa-facebook"></i></a>
+                    <a href="#"><i class="fa fa-twitter"></i></a>
+                    <a href="#"><i class="fa fa-instagram"></i></a>
+                    <a href="#"><i class="fa fa-linkedin"></i></a>
                 </div>
             </div>
 
-            <div class="col-md-2 mb-4">
-                <h6 class="text-uppercase mb-4 font-weight-bold">Explore</h6>
-                <ul class="list-unstyled">
-                    <li class="mb-2"><a href="/" class="text-muted">Home</a></li>
-                    <li class="mb-2"><a href="/about.php" class="text-muted">About Us</a></li>
-                    <li class="mb-2"><a href="/contact.php" class="text-muted">Contact</a></li>
-                    <li class="mb-2"><a href="/faq.php" class="text-muted">FAQ</a></li>
+            <!-- Links -->
+            <div class="col-md-2 col-sm-4 col-xs-6 mb-4">
+                <h5 class="footer-heading">Platform</h5>
+                <ul class="footer-links">
+                    <li><a href="<?php echo $base_url; ?>index.php">Home</a></li>
+                    <li><a href="<?php echo $base_url; ?>about.php">About Us</a></li>
+                    <li><a href="<?php echo $base_url; ?>viewcars.php">Rent a Car</a></li>
+                    <li><a href="<?php echo $base_url; ?>viewdriv.php">Hire Drivers</a></li>
                 </ul>
             </div>
 
-            <div class="col-md-3 mb-4">
-                <h6 class="text-uppercase mb-4 font-weight-bold">Our Services</h6>
-                <ul class="list-unstyled">
-                    <li class="mb-2"><a href="/viewcars.php" class="text-muted">Premium Car Rental</a></li>
-                    <li class="mb-2"><a href="/viewdriv.php" class="text-muted">Expert Driver Booking</a></li>
-                    <li class="mb-2"><a href="/viewservicee1.php" class="text-muted">Authorized Service Centers</a></li>
+            <!-- Support -->
+            <div class="col-md-2 col-sm-4 col-xs-6 mb-4">
+                <h5 class="footer-heading">Support</h5>
+                <ul class="footer-links">
+                    <li><a href="<?php echo $base_url; ?>contact.php">Contact Us</a></li>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms</a></li>
                 </ul>
             </div>
 
-            <div class="col-md-3 mb-4">
-                <h6 class="text-uppercase mb-4 font-weight-bold">Contact Info</h6>
-                <ul class="list-unstyled text-muted">
-                    <li class="mb-2"><i class="fas fa-map-marker-alt mr-2"></i> 123 Luxury Drive, Metro City</li>
-                    <li class="mb-2"><i class="fas fa-phone mr-2"></i> +1 (234) 567-890</li>
-                    <li class="mb-2"><i class="fas fa-envelope mr-2"></i> support@car2go.com</li>
-                </ul>
+            <!-- Newsletter -->
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                <h5 class="footer-heading">Be the First to Know</h5>
+                <p class="small text-muted mb-2">Subscribe for latest updates and offers.</p>
+                <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed!');">
+                    <div class="input-group">
+                        <input type="email" class="form-control" placeholder="Enter email address" required>
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="submit">Subscribe</button>
+                        </span>
+                    </div>
+                </form>
+                <div class="secure-badge">
+                    <i class="fa fa-lock text-success"></i> Secure & Spam-free
+                </div>
             </div>
         </div>
 
-        <hr style="border-top: 1px solid rgba(255,255,255,0.1); margin: 3rem 0 2rem;">
-
-        <div class="row align-items-center">
-            <div class="col-md-6 text-center text-md-left">
-                <p class="mb-0 text-muted" style="font-size: 0.9rem;">
-                    &copy; <?php echo date('Y'); ?> <strong>CAR2GO</strong>. All rights reserved.
-                </p>
-            </div>
-            <div class="col-md-6 text-center text-md-right mt-3 mt-md-0">
-                <a href="/privacy.php" class="text-muted mr-3" style="font-size: 0.9rem;">Privacy</a>
-                <a href="/terms.php" class="text-muted" style="font-size: 0.9rem;">Terms</a>
+        <div class="footer-bottom">
+            <div class="row">
+                <div class="col-sm-6 copyright">
+                    &copy; <?php echo date('Y'); ?> <strong>CAR2GO Inc.</strong> All rights reserved.
+                </div>
+                <div class="col-sm-6 text-right-sm">
+                    <span class="language-select"><i class="fa fa-globe"></i> English (US)</span>
+                </div>
             </div>
         </div>
     </div>
 </footer>
 
+<style>
+    /* Premium Footer CSS (Bootstrap 3 Compatible) */
+    #premium-footer {
+        background-color: #0f172a;
+        color: #94a3b8;
+        padding: 60px 0 20px;
+        font-size: 14px;
+        margin-top: 50px;
+        width: 100%;
+    }
+
+    #premium-footer .footer-brand {
+        display: block;
+        color: #fff;
+        font-size: 24px;
+        font-weight: 800;
+        margin-bottom: 15px;
+        text-decoration: none;
+    }
+
+    #premium-footer .footer-desc {
+        color: #cbd5e1;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        max-width: 300px;
+    }
+
+    #premium-footer .social-icons a {
+        display: inline-block;
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        color: #fff;
+        margin-right: 10px;
+        transition: all 0.3s;
+    }
+
+    #premium-footer .social-icons a:hover {
+        background: #2563eb;
+        text-decoration: none;
+    }
+
+    #premium-footer .footer-heading {
+        color: #fff;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 20px;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+    }
+
+    #premium-footer .footer-links {
+        list-style: none;
+        padding: 0;
+    }
+
+    #premium-footer .footer-links li {
+        margin-bottom: 10px;
+    }
+
+    #premium-footer .footer-links a {
+        color: #94a3b8;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    #premium-footer .footer-links a:hover {
+        color: #fff;
+        padding-left: 5px;
+    }
+
+    /* Newsletter */
+    #premium-footer .newsletter-form .form-control {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: #fff;
+        height: 42px;
+    }
+
+    #premium-footer .newsletter-form .btn-primary {
+        background: #2563eb;
+        border: none;
+        height: 42px;
+        font-weight: 600;
+        padding: 0 20px;
+    }
+
+    #premium-footer .newsletter-form .btn-primary:hover {
+        background: #1d4ed8;
+    }
+
+    #premium-footer .secure-badge {
+        font-size: 12px;
+        margin-top: 10px;
+        color: #64748b;
+    }
+
+    /* Bottom Bar */
+    #premium-footer .footer-bottom {
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 13px;
+    }
+
+    @media (min-width: 768px) {
+        .text-right-sm {
+            text-align: right;
+        }
+    }
+</style>
+
 <!-- JavaScript -->
 <script src="<?php echo $base_url; ?>js/jquery-2.1.4.min.js"></script>
 <script src="<?php echo $base_url; ?>js/bootstrap.js"></script>
 
-<!-- Additional JS (if any) -->
-<?php if (isset($extra_js)): ?>
-    <?php foreach ($extra_js as $js): ?>
-        <script src="<?php echo ($base_url ?? '/') . $js; ?>"></script>
-    <?php endforeach; ?>
-<?php endif; ?>
-
-<!-- Custom Scripts -->
+<!-- Clean up any flash messages -->
 <script>
-    // Auto-hide flash messages after 5 seconds
-    setTimeout(function () {
-        $('.alert').fadeOut('slow');
-    }, 5000);
-
-    // Add active class to current nav item
-    $(document).ready(function () {
-        var currentPage = window.location.pathname;
-        $('.navbar-nav a').each(function () {
-            var href = $(this).attr('href');
-            if (currentPage.indexOf(href) !== -1 && href !== '/') {
-                $(this).parent().addClass('active');
-            }
-        });
-    });
+    setTimeout(function () { $('.alert').fadeOut(); }, 4000);
 </script>
+
 </body>
 
 </html>
 <?php
 // Close database connection if exists
 if (isset($con) && $con instanceof mysqli) {
-    $con->close();
+    @$con->close();
 }
 ?>

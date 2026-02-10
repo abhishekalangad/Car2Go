@@ -29,68 +29,87 @@ $base_url = '../';
 include '../templates/header.php';
 ?>
 
-<div class="container-fluid py-5 px-5">
-    <div class="mb-5 d-flex justify-content-between align-items-end">
-        <div>
-            <h1 class="font-weight-bold mb-1 border-left border-primary pl-3 border-4">Booking Analytics</h1>
-            <p class="text-muted mb-0">Monitor all transactions and logistics across the platform.</p>
-        </div>
-        <div class="d-flex gap-3">
-            <div class="bg-white p-3 rounded-lg shadow-sm border text-center" style="min-width: 150px;">
-                <div class="small text-muted font-weight-bold uppercase mb-1">Total Bookings</div>
-                <div class="h4 font-weight-bold mb-0 text-primary">
-                    <?php echo count($car_bookings) + count($driver_bookings); ?>
-                </div>
+<div class="page-hero py-5"
+    style="background: linear-gradient(135deg, #1f2937 0%, #111827 100%); color: white; margin-top:-20px; border-radius: 0 0 40px 40px;">
+    <div class="container text-center">
+        <h1 class="display-4 font-weight-bold mb-2">Transaction Logs</h1>
+        <p class="opacity-7">Real-time overview of rental and service activity.</p>
+
+        <div class="d-inline-flex bg-white bg-opacity-10 rounded-pill px-4 py-2 mt-4 backdrop-blur">
+            <div class="mr-4">
+                <span class="d-block small text-white-50 font-weight-bold uppercase">Total Volume</span>
+                <span class="h5 font-weight-bold mb-0"><?php echo count($car_bookings) + count($driver_bookings); ?>
+                    Orders</span>
+            </div>
+            <div class="border-left border-light opacity-5 mx-2"></div>
+            <div class="ml-4">
+                <span class="d-block small text-white-50 font-weight-bold uppercase">Active Cars</span>
+                <span class="h5 font-weight-bold mb-0"><?php echo count($car_bookings); ?> Rentals</span>
             </div>
         </div>
     </div>
+</div>
 
+<div class="container-fluid px-5 py-5 mt-n5">
     <div class="row">
         <!-- Car Rentals Oversight -->
-        <div class="col-lg-7 mb-5">
-            <div class="card border-0 shadow-sm rounded-xl">
+        <div class="col-xl-7 mb-4">
+            <div class="card border-0 shadow-lg rounded-xl overflow-hidden h-100">
                 <div class="card-header bg-white py-4 border-0">
-                    <h5 class="font-weight-bold mb-0"><i class="fas fa-car mr-2 text-primary"></i> Car Rental
-                        Transactions</h5>
+                    <h5 class="font-weight-bold mb-0 text-dark"><i class="fas fa-car mr-2 text-primary"></i> Car Rentals
+                    </h5>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead class="bg-light small font-weight-bold uppercase">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="bg-light">
                             <tr>
-                                <th class="px-4">Vehicle</th>
-                                <th>Booker</th>
-                                <th>Owner</th>
-                                <th>Status</th>
-                                <th class="text-right px-4">Revenue</th>
+                                <th class="px-4 border-0 text-uppercase small font-weight-bold text-muted py-3">Vehicle
+                                    Details</th>
+                                <th class="border-0 text-uppercase small font-weight-bold text-muted py-3">Parties
+                                    Involved</th>
+                                <th class="border-0 text-uppercase small font-weight-bold text-center text-muted py-3">
+                                    Status</th>
+                                <th
+                                    class="text-right px-4 border-0 text-uppercase small font-weight-bold text-muted py-3">
+                                    Amount</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($car_bookings as $b): ?>
                                 <tr>
                                     <td class="px-4 align-middle">
-                                        <div class="font-weight-bold small">
-                                            <?php echo e($b['r_company']); ?>
-                                            <?php echo e($b['r_mname']); ?>
-                                        </div>
-                                        <div class="extra-small text-muted">ID: #
-                                            <?php echo $b['b_id']; ?>
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-light rounded p-2 mr-3 text-primary">
+                                                <i class="fas fa-key"></i>
+                                            </div>
+                                            <div>
+                                                <div class="font-weight-bold text-dark small">
+                                                    <?php echo e($b['r_company']); ?>     <?php echo e($b['r_mname']); ?>
+                                                </div>
+                                                <div class="extra-small text-muted">ID: #<?php echo $b['b_id']; ?></div>
+                                            </div>
                                         </div>
                                     </td>
                                     <td class="align-middle small">
-                                        <?php echo e($b['booker']); ?>
+                                        <div><span class="text-muted">Booker:</span> <span
+                                                class="font-weight-bold text-dark"><?php echo e($b['booker']); ?></span>
+                                        </div>
+                                        <div><span class="text-muted">Owner:</span> <?php echo e($b['owner']); ?></div>
                                     </td>
-                                    <td class="align-middle small">
-                                        <?php echo e($b['owner']); ?>
-                                    </td>
-                                    <td class="align-middle">
-                                        <span
-                                            class="badge badge-<?php echo ($b['b_status'] === 'confirmed' || $b['b_status'] === 'Paid') ? 'success' : 'warning'; ?> pill">
+                                    <td class="align-middle text-center">
+                                        <?php
+                                        $c_status = match ($b['b_status']) {
+                                            'confirmed', 'Paid' => 'success',
+                                            'Booked' => 'warning',
+                                            default => 'secondary'
+                                        };
+                                        ?>
+                                        <span class="badge badge-<?php echo $c_status; ?> pill px-3 py-1">
                                             <?php echo e($b['b_status']); ?>
                                         </span>
                                     </td>
-                                    <td class="text-right px-4 align-middle font-weight-bold">
-                                        ₹
-                                        <?php echo number_format($b['payment'] ?? 0, 2); ?>
+                                    <td class="text-right px-4 align-middle font-weight-bold text-dark">
+                                        ₹<?php echo number_format($b['payment'] ?? 0); ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -101,38 +120,48 @@ include '../templates/header.php';
         </div>
 
         <!-- Driver Gigs Oversight -->
-        <div class="col-lg-5 mb-5">
-            <div class="card border-0 shadow-sm rounded-xl">
+        <div class="col-xl-5 mb-4">
+            <div class="card border-0 shadow-lg rounded-xl overflow-hidden h-100">
                 <div class="card-header bg-white py-4 border-0">
-                    <h5 class="font-weight-bold mb-0"><i class="fas fa-user-tie mr-2 text-primary"></i> Driver
-                        Assignment Logs</h5>
+                    <h5 class="font-weight-bold mb-0 text-dark"><i class="fas fa-user-tie mr-2 text-primary"></i> Driver
+                        Logs</h5>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead class="bg-light small font-weight-bold uppercase">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="bg-light">
                             <tr>
-                                <th class="px-4">Log</th>
-                                <th>Driver</th>
-                                <th>Status</th>
+                                <th class="px-4 border-0 text-uppercase small font-weight-bold text-muted py-3">Trip
+                                    Info</th>
+                                <th class="border-0 text-uppercase small font-weight-bold text-muted py-3">Driver</th>
+                                <th
+                                    class="text-right px-4 border-0 text-uppercase small font-weight-bold text-muted py-3">
+                                    State</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($driver_bookings as $b): ?>
                                 <tr>
                                     <td class="px-4 align-middle">
-                                        <div class="font-weight-bold small">
-                                            <?php echo e($b['customer']); ?> hired driver
+                                        <div class="font-weight-bold small text-dark">
+                                            <?php echo e($b['customer']); ?>
                                         </div>
                                         <div class="extra-small text-muted">
-                                            <?php echo $b['d_day1']; ?> to
-                                            <?php echo $b['d_day2']; ?>
+                                            <?php echo date('M d', strtotime($b['d_day1'])); ?> -
+                                            <?php echo date('M d', strtotime($b['d_day2'])); ?>
                                         </div>
                                     </td>
-                                    <td class="align-middle small">
+                                    <td class="align-middle small font-weight-bold text-primary">
                                         <?php echo e($b['driver']); ?>
                                     </td>
-                                    <td class="align-middle">
-                                        <span class="badge badge-outline-secondary pill small px-2">
+                                    <td class="align-middle text-right px-4">
+                                        <?php
+                                        $d_status = match ($b['d_status']) {
+                                            'confirmed' => 'success',
+                                            'Requested' => 'warning',
+                                            default => 'secondary'
+                                        };
+                                        ?>
+                                        <span class="badge badge-outline-<?php echo $d_status; ?> pill small px-2">
                                             <?php echo e($b['d_status']); ?>
                                         </span>
                                     </td>
@@ -152,7 +181,7 @@ include '../templates/header.php';
     }
 
     .extra-small {
-        font-size: 0.65rem;
+        font-size: 0.7rem;
     }
 
     .uppercase {
@@ -162,18 +191,32 @@ include '../templates/header.php';
 
     .pill {
         border-radius: 30px;
-        font-weight: 600;
-        padding: 4px 12px;
     }
 
-    .border-4 {
-        border-left-width: 6px !important;
+    .badge-outline-success {
+        color: #10b981;
+        border: 1px solid #10b981;
+        background: transparent;
+    }
+
+    .badge-outline-warning {
+        color: #f59e0b;
+        border: 1px solid #f59e0b;
+        background: transparent;
     }
 
     .badge-outline-secondary {
-        border: 1px solid #cbd5e1;
         color: #64748b;
+        border: 1px solid #cbd5e1;
         background: transparent;
+    }
+
+    .bg-opacity-10 {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    .backdrop-blur {
+        backdrop-filter: blur(5px);
     }
 </style>
 

@@ -1,152 +1,104 @@
 <?php
-// session_start();
-include 'db_connect.php';
-include 'aheader.php';
-// if(isset($_SESSION['l_id']))
-// {
-//   $l_id =$_SESSION['l_id'];
-//   //var_dump($l_id);
+session_start();
+require_once 'config/db_connect.php';
+require_once 'includes/security.php';
 
+// Fetch All Service Bookings
+$query = "SELECT b.*, u.u_name as user_name, s.s_name as center_name, s.s_phone
+          FROM bservice b 
+          JOIN user_reg u ON b.cs_uid = u.ul_id 
+          JOIN service_reg s ON b.cs_cid = s.sl_id 
+          ORDER BY b.cs_date DESC";
 
-// }
+$bookings = db_fetch_all($con, $query);
+
+include 'templates/header.php';
 ?>
 
-<!-- our blog -->
-<section class="blog" id="blog">
-   <div class="container">
-      <div class="heading">
-         <h3> Service booking history </h3>
-         <h3>(from bookservice) </h3>
-      </div>
-      </div>
-      <div class="blog-grids" style="height: 500px;">
- <?php
-
- $s="SELECT * FROM bookservice  ";
-//var_dump($s);i
-      if(!$stmt=mysqli_query($con,$s))
-      {
-        die("Preparestatment error");
-      }
-      $d=array();
-      while ($row=mysqli_fetch_array($stmt))
-       {
-        $d[]=$row;
-   $b_id=$row['b_id'];
-  $br_id=$row['br_id'];
-  $bs_id=$row['bs_id'];
-  $b_date=$row['b_date'];
-  $b_status=$row['b_status'];
-
-
- //   $licence=$row['s_licence'];
- //  $name=$row['s_name'];
- // $email=$row['s_email'];
- //  $password=$row['s_password'];
- //  $address=$row['s_address'];
- //   // $city=$row['d_city'];
- //   // $state=$row['d_state'];
- //   $phone=$row['s_phone'];
- //   $pincode=$row['s_pincode'];
- //   $rc=$row['s_rc'];
- 
- //  $approve=$row['l_approve'];
-
-
-     $s1="SELECT * FROM user_reg  WHERE ul_id ='$br_id' ";  
-//var_dump($s);i
-      if(!$stmt1=mysqli_query($con,$s1))
-      {
-        die("Preparestatment error");
-      }
-      $d=array();
-      while ($row1=mysqli_fetch_array($stmt1))
-       {
-        
-     $rname=$row1['u_name'];
-
-}
-
- $s2="SELECT * FROM  service_reg WHERE s_id ='$bs_id'  "; 
-//var_dump($s);i
-      if(!$stmt2=mysqli_query($con,$s2))
-      {
-        die("Preparestatment error");
-      }
-      $d=array();
-      while ($row2=mysqli_fetch_array($stmt2))
-       {
-      
-   $oname=$row2['s_name'];
-}
-
-
-
-                                ?>
-
-      <div class="col-md-4 blog-grid" style="margin-top:30px;">
-         <!-- <a href="images/<?php echo $licence;?>" ><img src="images/<?php echo $licence;?>" alt="" /></a> -->
-         <h5></h5>
-         <!-- <h4><a href="images/<?php echo $licence;?>">Rc</a></h4> -->
-         <p> Requesting user :<?php echo $rname;?></p>
-         <!-- <p> Requesting car :<?php echo $name;?></p> -->
-         <p> Service center :<?php echo $oname;?></p>
-         <p> date :<?php echo $b_date;?></p>
-         <!-- <p> Ending date :<?php echo $b_day2;?></p> -->
-         <p> Status :<?php echo $b_status;?></p>
-
-         <!-- <p>Email : <?php echo $email;?></p>
-         <p>Address : <?php echo $address;?></p>
-         <p>Phone : <?php echo $phone;?></p>
-         <p>Pincode : <?php echo $pincode;?></p>
-          <p>Status :<?php echo $approve;?></p> -->
-                                
-                                    
-         <div class="readmore-w3">
-            <!-- <a class="readmore" href="#" data-toggle="modal" data-target="#myModal">Read More</a> -->
-               <!--  <?php
-                                    if($approve=='approve')
-                                    {
-                                    ?>
-                                   <a href="disser.php?sl_id=<?php echo $sl_id;?>"><button class="btn btn-danger">Disapprove</button></a>
-                                    <?php
-                                  }
-                                  else
-                                  {
-                                    ?>
-                                   <a href="appser.php?sl_id=<?php echo $sl_id;?>"><button class="btn btn-success">Approve</button></a>
-                                    <?php
-                                  }
-                                  ?> -->
-                                    
-                                 <!--    <a href="deleteser.php?sl_id=<?php echo $sl_id;?>"><button  class="btn btn-primary">Delete</button></a> -->
-         </div>
-      </div>
- <?php
-}
-?>
-      <div class="clearfix"></div>
-      </div>
+<div class="page-hero">
+   <div class="container hero-content text-center">
+      <h1 class="font-weight-bold mb-2 text-white">Service Booking History</h1>
+      <p class="lead text-white-50">Monitor all service center appointments.</p>
    </div>
-</section>
-<!-- //our blog -->
-<?php
+</div>
 
-include 'footer.php';
-?>
+<div class="container-fluid py-5" style="background: #f8fafc; min-height: 80vh;">
+   <div class="container animate__animated animate__fadeInUp bg-white rounded-lg shadow-sm p-0 overflow-hidden"
+      style="margin-top: -80px; position: relative; z-index: 10;">
 
+      <?php if (empty($bookings)): ?>
+         <div class="text-center p-5">
+            <h3 class="text-muted font-weight-bold">No Records Found</h3>
+         </div>
+      <?php else: ?>
+         <div class="table-responsive">
+            <table class="table table-hover mb-0">
+               <thead class="bg-light text-uppercase small text-muted font-weight-bold">
+                  <tr>
+                     <th class="py-4 px-4 border-0">Requested By</th>
+                     <th class="py-4 px-4 border-0">Service Center</th>
+                     <th class="py-4 px-4 border-0" style="width: 30%;">Issue / Request</th>
+                     <th class="py-4 px-4 border-0">Request Date</th>
+                     <th class="py-4 px-4 border-0">Action Taken</th>
+                     <th class="py-4 px-4 border-0">Completion Date</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <?php foreach ($bookings as $row): ?>
+                     <tr>
+                        <td class="px-4 py-4 align-middle">
+                           <div class="font-weight-bold text-dark"><?php echo htmlspecialchars($row['user_name']); ?></div>
+                        </td>
+                        <td class="px-4 py-4 align-middle">
+                           <div class="font-weight-bold text-primary"><?php echo htmlspecialchars($row['center_name']); ?>
+                           </div>
+                           <div class="small text-muted"><?php echo htmlspecialchars($row['s_phone']); ?></div>
+                        </td>
+                        <td class="px-4 py-4 align-middle text-muted small">
+                           "<?php echo htmlspecialchars($row['cs_ureview']); ?>"
+                        </td>
+                        <td class="px-4 py-4 align-middle text-dark font-weight-bold">
+                           <?php echo date('M d, Y', strtotime($row['cs_date'])); ?>
+                        </td>
+                        <td class="px-4 py-4 align-middle small">
+                           <?php if (!empty($row['cs_ereview'])): ?>
+                              <span class="text-success"><?php echo htmlspecialchars($row['cs_ereview']); ?></span>
+                           <?php else: ?>
+                              <span class="badge badge-warning-soft text-warning px-2 py-1 rounded">Pending</span>
+                           <?php endif; ?>
+                        </td>
+                        <td class="px-4 py-4 align-middle text-muted">
+                           <?php if (!empty($row['cs_edate'])): ?>
+                              <?php echo date('M d, Y', strtotime($row['cs_edate'])); ?>
+                           <?php else: ?>
+                              -
+                           <?php endif; ?>
+                        </td>
+                     </tr>
+                  <?php endforeach; ?>
+               </tbody>
+            </table>
+         </div>
+      <?php endif; ?>
+   </div>
+</div>
 
+<style>
+   .page-hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      padding: 5rem 0 8rem;
+      color: white;
+      position: relative;
+      overflow: hidden;
+   }
 
- <!-- //   $licence=$row['s_licence'];
- //  $name=$row['s_name'];
- // $email=$row['s_email'];
- //  $password=$row['s_password'];
- //  $address=$row['s_address'];
- //   // $city=$row['d_city'];
- //   // $state=$row['d_state'];
- //   $phone=$row['s_phone'];
- //   $pincode=$row['s_pincode'];
- //   $rc=$row['s_rc'];
- 
- //  $approve=$row['l_approve'];
- -->
+   .rounded-lg {
+      border-radius: 15px;
+   }
+
+   .badge-warning-soft {
+      background: #fef9c3;
+   }
+</style>
+
+<?php include 'templates/footer.php'; ?>

@@ -31,12 +31,23 @@ $page_title = 'Add New Service Offering - CAR2GO';
 include 'templates/header.php';
 ?>
 
-<div class="profile-hero py-5" style="background: #1e1b4b; margin-top: -20px;">
-  <div class="container text-center text-white">
-    <h2 class="font-weight-bold mb-0">Expand Your Service Menu</h2>
-    <p class="opacity-7">List new maintenance or repair packages for customers.</p>
+<div class="page-hero">
+  <div class="container hero-content text-center">
+    <h1 class="font-weight-bold mb-2 animate__animated animate__fadeInDown">Expand Your Service Menu</h1>
+    <p class="lead text-white-50 animate__animated animate__fadeInUp">List new maintenance or repair packages for
+      customers.</p>
   </div>
 </div>
+
+<style>
+  .page-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    padding: 5rem 0 8rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+</style>
 
 <div class="container py-5">
   <div class="row justify-content-center">
